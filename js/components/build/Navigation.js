@@ -8,6 +8,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = require('react-router');
 
+var _API = require('./API');
+
+var _API2 = _interopRequireDefault(_API);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28,60 +32,125 @@ var Navigation = function (_React$Component) {
     _createClass(Navigation, [{
         key: 'render',
         value: function render() {
-            return _react2.default.createElement(
-                'ul',
-                { className: 'navigation' },
-                _react2.default.createElement(
-                    'li',
-                    { className: 'nav-item' },
+            var user = this.props.user;
+
+            if (user) {
+                return _react2.default.createElement(
+                    'ul',
+                    { className: 'navigation' },
                     _react2.default.createElement(
-                        _reactRouter.Link,
-                        { to: '/' },
-                        _react2.default.createElement('img', { src: 'images/logo_light.png' })
-                    )
-                ),
-                _react2.default.createElement(
-                    'li',
-                    { className: 'nav-item' },
-                    _react2.default.createElement(
-                        _reactRouter.Link,
-                        { to: '/profile' },
+                        'li',
+                        { className: 'nav-item' },
                         _react2.default.createElement(
-                            'div',
-                            { className: 'menuprofile' },
-                            _react2.default.createElement('img', { src: 'images/profile.jpg' }),
-                            'Zac Ong'
+                            _reactRouter.Link,
+                            { to: '/' },
+                            _react2.default.createElement('img', { src: 'images/logo_light.png' })
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'li',
+                        { className: 'nav-item' },
+                        _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: '/profile' },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'menuprofile' },
+                                _react2.default.createElement('img', { src: user.image_url ? user.image_url : 'images/avatar.png' }),
+                                user.firstname,
+                                ' ',
+                                user.lastname
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'li',
+                        { className: 'nav-item' },
+                        _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: '/map' },
+                            'Map'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'li',
+                        { className: 'nav-item' },
+                        _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: '/add-hoop' },
+                            'Add a hoop'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'li',
+                        { className: 'nav-item' },
+                        _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: '/activities' },
+                            'Activity feed'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'li',
+                        { className: 'nav-item' },
+                        _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: '/about' },
+                            'About'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'li',
+                        { className: 'nav-item' },
+                        _react2.default.createElement(
+                            'a',
+                            { href: '#', onClick: this.logout },
+                            'Logout'
                         )
                     )
-                ),
-                _react2.default.createElement(
-                    'li',
-                    { className: 'nav-item' },
+                );
+            } else {
+                return _react2.default.createElement(
+                    'ul',
+                    { className: 'navigation' },
                     _react2.default.createElement(
-                        _reactRouter.Link,
-                        { to: '/about' },
-                        'About'
-                    )
-                ),
-                _react2.default.createElement(
-                    'li',
-                    { className: 'nav-item' },
+                        'li',
+                        { className: 'nav-item' },
+                        _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: '/' },
+                            _react2.default.createElement('img', { src: 'images/logo_light.png' })
+                        )
+                    ),
                     _react2.default.createElement(
-                        _reactRouter.Link,
-                        { to: '/add-hoop' },
-                        'Add a hoop'
-                    )
-                ),
-                _react2.default.createElement(
-                    'li',
-                    { className: 'nav-item' },
+                        'li',
+                        { className: 'nav-item' },
+                        _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: '/about' },
+                            'About'
+                        )
+                    ),
                     _react2.default.createElement(
-                        _reactRouter.Link,
-                        { to: '/activities' },
-                        'Activity feed'
+                        'li',
+                        { className: 'nav-item' },
+                        _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: '/login' },
+                            'Add a hoop'
+                        )
                     )
-                )
-            );
+                );
+            }
+        }
+    }, {
+        key: 'logout',
+        value: function logout() {
+            _API2.default.logout(function () {
+                _reactRouter.hashHistory.replace('/');
+            }, function () {
+                alert('Failed to log out!');
+            });
         }
     }]);
 

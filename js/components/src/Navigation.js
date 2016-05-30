@@ -1,19 +1,48 @@
 'use strict'
 
-import React from 'react';
-import { Link } from 'react-router';
+import React from 'react'
+import { Link, hashHistory } from 'react-router'
+
+import API from './API'
 
 class Navigation extends React.Component {
     render() {
-        return (
-           <ul className='navigation'>
-               <li className='nav-item'><Link to='/'><img src='images/logo_light.png' /></Link></li>
-               <li className='nav-item'><Link to='/profile'><div className='menuprofile'><img src='images/profile.jpg' />Zac Ong</div></Link></li>
-               <li className='nav-item'><Link to='/about'>About</Link></li>
-               <li className='nav-item'><Link to='/add-hoop'>Add a hoop</Link></li>
-               <li className='nav-item'><Link to='/activities'>Activity feed</Link></li>
-           </ul>
-        )
+        let user = this.props.user;
+
+        if (user) {
+            return (
+               <ul className='navigation'>
+                   <li className='nav-item'><Link to='/'><img src='images/logo_light.png' /></Link></li>
+                   <li className='nav-item'>
+                       <Link to='/profile'>
+                           <div className='menuprofile'>
+                               <img src={ user.image_url ? user.image_url : 'images/avatar.png' } />{ user.firstname } { user.lastname }
+                           </div>
+                       </Link>
+                   </li>
+                   <li className='nav-item'><Link to='/map'>Map</Link></li>
+                   <li className='nav-item'><Link to='/add-hoop'>Add a hoop</Link></li>
+                   <li className='nav-item'><Link to='/activities'>Activity feed</Link></li>
+                   <li className='nav-item'><Link to='/about'>About</Link></li>
+                   <li className='nav-item'><a href='#' onClick={ this.logout }>Logout</a></li>
+               </ul>
+            )
+        } else {
+            return (
+               <ul className='navigation'>
+                   <li className='nav-item'><Link to='/'><img src='images/logo_light.png' /></Link></li>
+                   <li className='nav-item'><Link to='/about'>About</Link></li>
+                   <li className='nav-item'><Link to='/login'>Add a hoop</Link></li>
+               </ul>
+            )
+        }
+    }
+    logout() {
+        API.logout(() => {
+            hashHistory.replace('/');
+        }, () => {
+            alert('Failed to log out!');
+        });
     }
 }
 

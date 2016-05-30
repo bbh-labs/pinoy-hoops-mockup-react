@@ -8,6 +8,14 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = require('react-router');
 
+var _API = require('./API');
+
+var _API2 = _interopRequireDefault(_API);
+
+var _Dispatcher = require('./Dispatcher');
+
+var _Dispatcher2 = _interopRequireDefault(_Dispatcher);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -20,14 +28,54 @@ var Profile = function (_React$Component) {
     _inherits(Profile, _React$Component);
 
     function Profile() {
+        var _Object$getPrototypeO;
+
+        var _temp, _this, _ret;
+
         _classCallCheck(this, Profile);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Profile).apply(this, arguments));
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Profile)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+            myHoops: null,
+            otherHoops: null,
+            tab: 'my-hoops',
+            editing: false
+        }, _this.hoops = function () {
+            var myHoops = _this.state.myHoops;
+            var otherHoops = _this.state.otherHoops;
+
+            switch (_this.state.tab) {
+                case 'my-hoops':
+                    return myHoops ? myHoops.map(function (hoop) {
+                        return _react2.default.createElement('img', { key: hoop.data.featured_story.id, src: hoop.data.featured_story.image_url });
+                    }) : null;
+                case 'other-hoops':
+                    return otherHoops ? otherHoops.map(function (hoop) {
+                        return _react2.default.createElement('img', { key: hoop.data.featured_story.id, src: hoop.data.featured_story.image_url });
+                    }) : null;
+            }
+        }, _this.setTab = function (tab) {
+            _this.setState({ tab: tab });
+        }, _this.handleUserImage = function (event) {
+            _API2.default.updateUserImage(new FormData(_this.refs.userImageForm), function () {
+                _Dispatcher2.default.dispatch({ type: 'refresh-user' });
+            });
+        }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     _createClass(Profile, [{
         key: 'render',
         value: function render() {
+            var user = this.props.user;
+            if (!user) {
+                return null;
+            }
+
+            var tab = this.state.tab;
+
             return _react2.default.createElement(
                 'div',
                 { className: 'site-wrap' },
@@ -35,9 +83,14 @@ var Profile = function (_React$Component) {
                     'div',
                     { className: 'profile' },
                     _react2.default.createElement(
-                        'div',
-                        { className: 'picture' },
-                        _react2.default.createElement('img', { src: 'images/zac.jpg' })
+                        'form',
+                        { ref: 'userImageForm', className: 'picture' },
+                        _react2.default.createElement(
+                            'label',
+                            { htmlFor: 'user-image' },
+                            _react2.default.createElement('input', { id: 'user-image', type: 'file', name: 'image', onChange: this.handleUserImage }),
+                            _react2.default.createElement('img', { src: user.image_url ? user.image_url : 'images/avatar.png' })
+                        )
                     ),
                     _react2.default.createElement(
                         'div',
@@ -45,16 +98,20 @@ var Profile = function (_React$Component) {
                         _react2.default.createElement(
                             'h3',
                             null,
-                            'Zac Ong'
+                            user.firstname,
+                            ' ',
+                            user.lastname
                         ),
                         _react2.default.createElement(
                             'p',
                             null,
-                            '24, Male'
+                            user.birthdate,
+                            ', ',
+                            user.gender
                         ),
                         _react2.default.createElement(
                             'button',
-                            null,
+                            { onClick: this.toggleEdit },
                             'Edit Profile'
                         )
                     ),
@@ -66,31 +123,51 @@ var Profile = function (_React$Component) {
                             { className: 'filter' },
                             _react2.default.createElement(
                                 'p',
-                                { style: { color: '#ff6b00' } },
+                                { onClick: this.setTab.bind(this, 'my-hoops'), style: { color: tab == 'my-hoops' && '#ff6b00' } },
                                 'My hoops'
                             ),
                             _react2.default.createElement(
                                 'p',
-                                null,
+                                { onClick: this.setTab.bind(this, 'other-hoops'), style: { color: tab == 'other-hoops' && '#ff6b00' } },
                                 'Other hoops'
                             )
                         ),
                         _react2.default.createElement(
                             'div',
                             { className: 'gallery' },
-                            _react2.default.createElement('img', { src: 'images/dummy01.jpg' }),
-                            _react2.default.createElement('img', { src: 'images/dummy02.jpg' }),
-                            _react2.default.createElement('img', { src: 'images/dummy03.jpg' }),
-                            _react2.default.createElement('img', { src: 'images/dummy04.jpg' }),
-                            _react2.default.createElement('img', { src: 'images/dummy05.jpg' }),
-                            _react2.default.createElement('img', { src: 'images/dummy06.jpg' }),
-                            _react2.default.createElement('img', { src: 'images/dummy07.jpg' }),
-                            _react2.default.createElement('img', { src: 'images/dummy08.jpg' }),
-                            _react2.default.createElement('img', { src: 'images/dummy09.jpg' })
+                            this.hoops()
                         )
                     )
                 )
             );
+        }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            this.getMyHoops();
+            this.getOtherHoops();
+        }
+    }, {
+        key: 'getMyHoops',
+        value: function getMyHoops() {
+            var _this2 = this;
+
+            _API2.default.getMyHoops(function (hoops) {
+                _this2.setState({ myHoops: hoops });
+            }, function (response) {
+                alert('Failed to get my hoops!');
+            });
+        }
+    }, {
+        key: 'getOtherHoops',
+        value: function getOtherHoops() {
+            var _this3 = this;
+
+            _API2.default.getOtherHoops(function (hoops) {
+                _this3.setState({ otherHoops: hoops });
+            }, function (response) {
+                alert('Failed to get other hoops');
+            });
         }
     }]);
 

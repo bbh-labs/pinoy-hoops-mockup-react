@@ -1,7 +1,9 @@
 'use strict'
 
-import React from 'react';
-import { Link } from 'react-router';
+import React from 'react'
+import { Link } from 'react-router'
+
+import Dispatcher from './Dispatcher'
 
 class MapView extends React.Component {
     render() {
@@ -26,12 +28,15 @@ class MapView extends React.Component {
 
         // Create the Google Map using our element and options defined above
         this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        this.map.addListener('click', function(event) {
+            Dispatcher.dispatch({ type: 'map-click', latlng: event.latLng });
+        });
 
         // Let's also add a marker while we're at it
         var marker = new google.maps.Marker({
             position: new google.maps.LatLng(14.5980, 120.9446),
             map: this.map,
-            title: 'Snazzy!',
+            title: 'Hoop',
         });
     }
     componentWillUnmount() {

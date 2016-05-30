@@ -8,14 +8,6 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = require('react-router');
 
-var _API = require('./API');
-
-var _API2 = _interopRequireDefault(_API);
-
-var _Dispatcher = require('./Dispatcher');
-
-var _Dispatcher2 = _interopRequireDefault(_Dispatcher);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24,16 +16,16 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Login = function (_React$Component) {
-    _inherits(Login, _React$Component);
+var SocialLogin = function (_React$Component) {
+    _inherits(SocialLogin, _React$Component);
 
-    function Login() {
-        _classCallCheck(this, Login);
+    function SocialLogin() {
+        _classCallCheck(this, SocialLogin);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Login).apply(this, arguments));
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(SocialLogin).apply(this, arguments));
     }
 
-    _createClass(Login, [{
+    _createClass(SocialLogin, [{
         key: 'render',
         value: function render() {
             return _react2.default.createElement(
@@ -41,7 +33,7 @@ var Login = function (_React$Component) {
                 { className: 'site-wrap' },
                 _react2.default.createElement(
                     'div',
-                    { className: 'login' },
+                    { className: 'social-login' },
                     _react2.default.createElement(
                         'div',
                         { className: 'logo' },
@@ -49,41 +41,41 @@ var Login = function (_React$Component) {
                             _reactRouter.Link,
                             { to: '/' },
                             _react2.default.createElement('img', { src: 'images/logo_light.png' })
+                        ),
+                        _react2.default.createElement(
+                            'p',
+                            null,
+                            'The home of all things basketball'
                         )
                     ),
                     _react2.default.createElement(
-                        'form',
-                        { className: 'login-email' },
+                        'div',
+                        { className: 'social-login-content' },
                         _react2.default.createElement(
-                            'h4',
-                            null,
-                            'Login with email'
-                        ),
-                        _react2.default.createElement('input', { type: 'email', placeholder: 'Email', name: 'email' }),
-                        _react2.default.createElement('br', null),
-                        _react2.default.createElement('input', { type: 'password', placeholder: 'Password', name: 'password' }),
-                        _react2.default.createElement('br', null),
-                        _react2.default.createElement(
-                            'form',
-                            { method: 'POST', onSubmit: this.submit },
-                            _react2.default.createElement(
-                                'label',
-                                null,
-                                'Email: '
-                            ),
-                            _react2.default.createElement('input', { type: 'email', name: 'email' }),
-                            _react2.default.createElement('br', null),
-                            _react2.default.createElement(
-                                'label',
-                                null,
-                                'Password: '
-                            ),
-                            _react2.default.createElement('input', { type: 'password', name: 'password' }),
-                            _react2.default.createElement('br', null),
+                            'a',
+                            { href: '/auth/facebook' },
                             _react2.default.createElement(
                                 'button',
-                                { type: 'submit' },
-                                'Login'
+                                { style: { backgroundColor: '#3c5a99' } },
+                                'Login with Facebook'
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'a',
+                            { href: '/auth/twitter' },
+                            _react2.default.createElement(
+                                'button',
+                                { style: { backgroundColor: '#00abf1' } },
+                                'Login with Twitter'
+                            )
+                        ),
+                        _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: '/login' },
+                            _react2.default.createElement(
+                                'button',
+                                { style: { backgroundColor: '#ff6b00' } },
+                                'Login with Email'
                             )
                         ),
                         _react2.default.createElement(
@@ -104,21 +96,9 @@ var Login = function (_React$Component) {
                 )
             );
         }
-    }, {
-        key: 'submit',
-        value: function submit(event) {
-            event.preventDefault();
-
-            _API2.default.login(new FormData(event.target), function () {
-                alert('Successfully logged in!');
-                _Dispatcher2.default.dispatch({ type: 'refresh-user', goto: '/map' });
-            }, function (response) {
-                alert(response.statusText + ': failed to log in!');
-            });
-        }
     }]);
 
-    return Login;
+    return SocialLogin;
 }(_react2.default.Component);
 
-module.exports = Login;
+module.exports = SocialLogin;

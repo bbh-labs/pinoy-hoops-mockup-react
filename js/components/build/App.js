@@ -12,6 +12,14 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 
 var _reactRouter = require('react-router');
 
+var _Dispatcher = require('./Dispatcher');
+
+var _Dispatcher2 = _interopRequireDefault(_Dispatcher);
+
+var _API = require('./API');
+
+var _API2 = _interopRequireDefault(_API);
+
 var _About = require('./About');
 
 var _About2 = _interopRequireDefault(_About);
@@ -48,9 +56,17 @@ var _Profile = require('./Profile');
 
 var _Profile2 = _interopRequireDefault(_Profile);
 
+var _Share = require('./Share');
+
+var _Share2 = _interopRequireDefault(_Share);
+
 var _Signup = require('./Signup');
 
 var _Signup2 = _interopRequireDefault(_Signup);
+
+var _SocialLogin = require('./SocialLogin');
+
+var _SocialLogin2 = _interopRequireDefault(_SocialLogin);
 
 var _Story = require('./Story');
 
@@ -68,22 +84,67 @@ var App = function (_React$Component) {
     _inherits(App, _React$Component);
 
     function App() {
+        var _Object$getPrototypeO;
+
+        var _temp, _this, _ret;
+
         _classCallCheck(this, App);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(App).apply(this, arguments));
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(App)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+            user: null
+        }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     _createClass(App, [{
         key: 'render',
         value: function render() {
+            var showNavigation = true;
+
+            if (this.props.location.pathname == '/') {
+                showNavigation = false;
+            }
+
             return _react2.default.createElement(
                 'div',
                 { id: 'app' },
-                _react2.default.createElement(_Navigation2.default, null),
-                _react2.default.createElement('input', { type: 'checkbox', id: 'nav-trigger', className: 'nav-trigger' }),
-                _react2.default.createElement('label', { htmlFor: 'nav-trigger' }),
-                this.props.children
+                showNavigation ? _react2.default.createElement(_Navigation2.default, this.state) : null,
+                showNavigation ? _react2.default.createElement('input', { type: 'checkbox', id: 'nav-trigger', className: 'nav-trigger' }) : null,
+                showNavigation ? _react2.default.createElement('label', { htmlFor: 'nav-trigger' }) : null,
+                this.props.children && _react2.default.cloneElement(this.props.children, this.state)
             );
+        }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            this.checkLoggedIn();
+
+            this.dispatcherID = _Dispatcher2.default.register(function (payload) {
+                switch (payload.type) {
+                    case 'refresh-user':
+                        _this2.checkLoggedIn();
+
+                        if (payload.goto) _reactRouter.hashHistory.replace(payload.goto);
+
+                        break;
+                }
+            });
+        }
+    }, {
+        key: 'checkLoggedIn',
+        value: function checkLoggedIn() {
+            var _this3 = this;
+
+            _API2.default.isLoggedIn(function (user) {
+                _this3.setState({ user: user });
+            }, function () {
+                _this3.setState({ user: null });
+            });
         }
     }]);
 
@@ -100,11 +161,13 @@ _reactDom2.default.render(_react2.default.createElement(
         _react2.default.createElement(_reactRouter.Route, { path: '/about', component: _About2.default }),
         _react2.default.createElement(_reactRouter.Route, { path: '/activities', component: _Activities2.default }),
         _react2.default.createElement(_reactRouter.Route, { path: '/add-hoop', component: _AddHoop2.default }),
-        _react2.default.createElement(_reactRouter.Route, { path: '/hoop', component: _Hoop2.default }),
+        _react2.default.createElement(_reactRouter.Route, { path: '/hoop/:hoopID', component: _Hoop2.default }),
+        _react2.default.createElement(_reactRouter.Route, { path: '/social-login', component: _SocialLogin2.default }),
         _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _Login2.default }),
         _react2.default.createElement(_reactRouter.Route, { path: '/map', component: _Map2.default }),
         _react2.default.createElement(_reactRouter.Route, { path: '/profile', component: _Profile2.default }),
         _react2.default.createElement(_reactRouter.Route, { path: '/signup', component: _Signup2.default }),
-        _react2.default.createElement(_reactRouter.Route, { path: '/story', component: _Story2.default })
+        _react2.default.createElement(_reactRouter.Route, { path: '/story/:storyID', component: _Story2.default }),
+        _react2.default.createElement(_reactRouter.Route, { path: '/story/:storyID/share', component: _Share2.default })
     )
 ), document.getElementById('root'));

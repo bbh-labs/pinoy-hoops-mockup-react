@@ -8,6 +8,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = require('react-router');
 
+var _API = require('./API');
+
+var _API2 = _interopRequireDefault(_API);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -20,14 +24,39 @@ var Hoop = function (_React$Component) {
     _inherits(Hoop, _React$Component);
 
     function Hoop() {
+        var _Object$getPrototypeO;
+
+        var _temp, _this, _ret;
+
         _classCallCheck(this, Hoop);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Hoop).apply(this, arguments));
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Hoop)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+            hoop: null,
+            mostCommentedStories: null,
+            mostLikedStories: null,
+            mostViewedStories: null,
+            latestStories: null,
+            tab: 'most-recent'
+        }, _this.setTab = function (tab) {
+            _this.setState({ tab: tab });
+        }, _this.addStory = function () {}, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     _createClass(Hoop, [{
         key: 'render',
         value: function render() {
+            var hoop = this.state.hoop;
+            if (!hoop) {
+                return null;
+            }
+
+            var latestStories = this.state.latestStories;
+            var tab = this.state.tab;
+
             return _react2.default.createElement(
                 'div',
                 { className: 'site-wrap' },
@@ -37,11 +66,11 @@ var Hoop = function (_React$Component) {
                     _react2.default.createElement(
                         'div',
                         { className: 'heroimage' },
-                        _react2.default.createElement('img', { src: 'images/dummy08.jpg' }),
+                        _react2.default.createElement('img', { src: latestStories ? latestStories[0].image_url : '' }),
                         _react2.default.createElement(
                             'h2',
                             null,
-                            'La Concordia'
+                            hoop.title
                         )
                     ),
                     _react2.default.createElement(
@@ -50,11 +79,13 @@ var Hoop = function (_React$Component) {
                         _react2.default.createElement(
                             'div',
                             { className: 'userprofile' },
-                            _react2.default.createElement('img', { src: 'images/zac.jpg' }),
+                            _react2.default.createElement('img', { src: hoop.user.image_url }),
                             _react2.default.createElement(
                                 'h6',
                                 null,
-                                'Zac Ong'
+                                hoop.user.firstname,
+                                ' ',
+                                hoop.user.lastname
                             )
                         ),
                         _react2.default.createElement(
@@ -77,13 +108,18 @@ var Hoop = function (_React$Component) {
                         { className: 'filter' },
                         _react2.default.createElement(
                             'p',
-                            { style: { color: '#ff6b00' } },
+                            { onClick: this.setTab.bind(this, 'most-recent'), style: { color: tab == 'most-recent' && '#ff6b00' } },
                             'Most Recent'
                         ),
                         _react2.default.createElement(
                             'p',
-                            null,
+                            { onClick: this.setTab.bind(this, 'most-liked'), style: { color: tab == 'most-liked' && '#ff6b00' } },
                             'Most Liked'
+                        ),
+                        _react2.default.createElement(
+                            'p',
+                            { onClick: this.setTab.bind(this, 'most-viewed'), style: { color: tab == 'most-viewed' && '#ff6b00' } },
+                            'Most Viewed'
                         )
                     ),
                     _react2.default.createElement(
@@ -92,55 +128,112 @@ var Hoop = function (_React$Component) {
                         _react2.default.createElement(
                             'li',
                             null,
-                            _react2.default.createElement('img', { src: 'images/icon_plus.png' })
-                        ),
-                        _react2.default.createElement(
-                            'li',
-                            null,
                             _react2.default.createElement(
-                                _reactRouter.Link,
-                                { to: '/story' },
-                                _react2.default.createElement('img', { src: 'images/dummy02.jpg' })
+                                'form',
+                                { onSubmit: this.addStory },
+                                _react2.default.createElement('img', { src: 'images/icon_plus.png' })
                             )
                         ),
-                        _react2.default.createElement(
-                            'li',
-                            null,
-                            _react2.default.createElement('img', { src: 'images/dummy03.jpg' })
-                        ),
-                        _react2.default.createElement(
-                            'li',
-                            null,
-                            _react2.default.createElement('img', { src: 'images/dummy04.jpg' })
-                        ),
-                        _react2.default.createElement(
-                            'li',
-                            null,
-                            _react2.default.createElement('img', { src: 'images/dummy05.jpg' })
-                        ),
-                        _react2.default.createElement(
-                            'li',
-                            null,
-                            _react2.default.createElement('img', { src: 'images/dummy06.jpg' })
-                        ),
-                        _react2.default.createElement(
-                            'li',
-                            null,
-                            _react2.default.createElement('img', { src: 'images/dummy07.jpg' })
-                        ),
-                        _react2.default.createElement(
-                            'li',
-                            null,
-                            _react2.default.createElement('img', { src: 'images/dummy08.jpg' })
-                        ),
-                        _react2.default.createElement(
-                            'li',
-                            null,
-                            _react2.default.createElement('img', { src: 'images/dummy09.jpg' })
-                        )
+                        this.stories()
                     )
                 )
             );
+        }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            var hoopID = this.props.params.hoopID;
+
+            _API2.default.getHoop({ hoopID: hoopID }, function (hoop) {
+                _this2.setState({ hoop: hoop });
+            }, function (response) {
+                alert('Failed to get hoop');
+            });
+
+            _API2.default.getMostCommentedStories({ hoop_id: hoopID }, function (stories) {
+                _this2.setState({ mostCommentedStories: stories });
+            }, function (response) {
+                alert('Failed to get most commented stories');
+            });
+
+            _API2.default.getMostLikedStories({ hoop_id: hoopID }, function (stories) {
+                _this2.setState({ mostLikedStories: stories });
+            }, function (response) {
+                alert('Failed to get most liked stories');
+            });
+
+            _API2.default.getMostViewedStories({ hoop_id: hoopID }, function (stories) {
+                _this2.setState({ mostViewedStories: stories });
+            }, function (response) {
+                alert('Failed to get most viewed stories');
+            });
+
+            _API2.default.getLatestStories({ hoop_id: hoopID }, function (stories) {
+                _this2.setState({ latestStories: stories });
+            }, function (response) {
+                alert('Failed to get latest stories');
+            });
+        }
+    }, {
+        key: 'stories',
+        value: function stories() {
+            var latestStories = this.state.latestStories;
+            var mostViewedStories = this.state.mostViewedStories;
+            var mostLikedStories = this.state.mostLikedStories;
+            var mostCommentedStories = this.state.mostCommentedStories;
+
+            switch (this.state.tab) {
+                case 'most-recent':
+                    return latestStories ? latestStories.map(function (story) {
+                        return _react2.default.createElement(
+                            'li',
+                            { key: story.id },
+                            _react2.default.createElement(
+                                _reactRouter.Link,
+                                { to: '/story/' + story.id },
+                                _react2.default.createElement('img', { src: story.image_url })
+                            )
+                        );
+                    }) : null;
+                case 'most-viewed':
+                    return mostViewedStories ? mostViewedStories.map(function (story) {
+                        return _react2.default.createElement(
+                            'li',
+                            { key: story.id },
+                            _react2.default.createElement(
+                                _reactRouter.Link,
+                                { to: '/story/' + story.id },
+                                _react2.default.createElement('img', { src: story.image_url })
+                            )
+                        );
+                    }) : null;
+                case 'most-liked':
+                    return mostLikedStories ? mostLikedStories.map(function (story) {
+                        return _react2.default.createElement(
+                            'li',
+                            { key: story.id },
+                            _react2.default.createElement(
+                                _reactRouter.Link,
+                                { to: '/story/' + story.id },
+                                _react2.default.createElement('img', { src: story.image_url })
+                            )
+                        );
+                    }) : null;
+                case 'most-commented':
+                    return mostCommentedStories ? mostCommentedStories.map(function (story) {
+                        return _react2.default.createElement(
+                            'li',
+                            { key: story.id },
+                            _react2.default.createElement(
+                                _reactRouter.Link,
+                                { to: '/story/' + story.id },
+                                _react2.default.createElement('img', { src: story.image_url })
+                            )
+                        );
+                    }) : null;
+            }
         }
     }]);
 

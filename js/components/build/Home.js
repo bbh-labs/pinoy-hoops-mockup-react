@@ -67,6 +67,15 @@ var Home = function (_React$Component) {
                         null,
                         'Enter'
                     )
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'nav-arrow' },
+                    _react2.default.createElement(
+                        _reactRouter.Link,
+                        { to: '/map' },
+                        _react2.default.createElement('img', { src: 'images/landingpage/arrow.png' })
+                    )
                 )
             );
         }

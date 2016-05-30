@@ -8,6 +8,14 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = require('react-router');
 
+var _API = require('./API');
+
+var _API2 = _interopRequireDefault(_API);
+
+var _Dispatcher = require('./Dispatcher');
+
+var _Dispatcher2 = _interopRequireDefault(_Dispatcher);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -53,34 +61,41 @@ var Signup = function (_React$Component) {
                         { className: 'signup-content' },
                         _react2.default.createElement(
                             'form',
-                            null,
+                            { method: 'POST', onSubmit: this.submit },
                             _react2.default.createElement(
                                 'label',
                                 null,
                                 'First name: '
                             ),
-                            _react2.default.createElement('input', { type: 'text', name: 'fname' }),
+                            _react2.default.createElement('input', { type: 'text', name: 'firstname' }),
                             _react2.default.createElement('br', null),
                             _react2.default.createElement(
                                 'label',
                                 null,
                                 'Last name: '
                             ),
-                            _react2.default.createElement('input', { type: 'text', name: 'lname' }),
+                            _react2.default.createElement('input', { type: 'text', name: 'lastname' }),
                             _react2.default.createElement('br', null),
                             _react2.default.createElement(
                                 'label',
                                 null,
                                 'Email: '
                             ),
-                            _react2.default.createElement('input', { type: 'text', name: 'email' }),
+                            _react2.default.createElement('input', { type: 'email', name: 'email' }),
+                            _react2.default.createElement('br', null),
+                            _react2.default.createElement(
+                                'label',
+                                null,
+                                'Password: '
+                            ),
+                            _react2.default.createElement('input', { type: 'password', name: 'password' }),
                             _react2.default.createElement('br', null),
                             _react2.default.createElement(
                                 'label',
                                 null,
                                 'Age: '
                             ),
-                            _react2.default.createElement('input', { type: 'text', name: 'age' }),
+                            _react2.default.createElement('input', { type: 'date', name: 'birthdate' }),
                             _react2.default.createElement('br', null),
                             _react2.default.createElement(
                                 'label',
@@ -95,11 +110,17 @@ var Signup = function (_React$Component) {
                                 'Upload picture: '
                             ),
                             _react2.default.createElement(
-                                'button',
-                                null,
-                                'Select file'
+                                'label',
+                                { htmlFor: 'upload-image' },
+                                'Select file',
+                                _react2.default.createElement('input', { id: 'upload-image', type: 'file', name: 'image' })
                             ),
-                            _react2.default.createElement('br', null)
+                            _react2.default.createElement('br', null),
+                            _react2.default.createElement(
+                                'button',
+                                { type: 'submit' },
+                                'Signup'
+                            )
                         ),
                         _react2.default.createElement(
                             'p',
@@ -118,6 +139,18 @@ var Signup = function (_React$Component) {
                     )
                 )
             );
+        }
+    }, {
+        key: 'submit',
+        value: function submit(event) {
+            event.preventDefault();
+
+            _API2.default.signup(new FormData(event.target), function () {
+                alert('Successfully signed up!');
+                _Dispatcher2.default.dispatch({ type: 'refresh-user', path: '/map' });
+            }, function (response) {
+                alert(response.statusText + ': failed to sign up!');
+            });
         }
     }]);
 

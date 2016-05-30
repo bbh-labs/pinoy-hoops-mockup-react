@@ -8,6 +8,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = require('react-router');
 
+var _API = require('./API');
+
+var _API2 = _interopRequireDefault(_API);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -20,14 +24,88 @@ var Story = function (_React$Component) {
     _inherits(Story, _React$Component);
 
     function Story() {
+        var _Object$getPrototypeO;
+
+        var _temp, _this, _ret;
+
         _classCallCheck(this, Story);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(Story).apply(this, arguments));
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Story)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+            story: null,
+            comments: null,
+            likes: 0
+        }, _this.like = function () {
+            var story = _this.state.story;
+            if (story) {
+                _API2.default.likeStory({ 'story-id': story.id }, function () {
+                    _this.getLikes(story.id);
+                }, function (response) {
+                    alert('Failed to like story');
+                });
+            }
+        }, _this.comment = function (event) {
+            event.preventDefault();
+
+            var story = _this.state.story;
+            if (story) {
+                var text = event.target.elements['text'].value;
+                _API2.default.commentStory({ 'story-id': story.id, text: text }, function () {
+                    _this.getComments(story.id);
+                }, function (response) {
+                    alert('Failed to comment on the story!');
+                });
+            }
+        }, _this.getLikes = function (storyID) {
+            _API2.default.getStoryLikes({ 'story-id': storyID }, function (likes) {
+                _this.setState({ likes: likes });
+            }, function (response) {
+                alert('Failed to get likes count');
+            });
+        }, _this.getComments = function (storyID) {
+            _API2.default.getStoryComments({ 'story-id': storyID }, function (comments) {
+                _this.setState({ comments: comments });
+            }, function (response) {
+                alert('Failed to get story comments');
+            });
+        }, _this.comments = function () {
+            var comments = _this.state.comments;
+            if (!comments) {
+                return null;
+            }
+
+            return comments.map(function (comment) {
+                return _react2.default.createElement(
+                    'p',
+                    { key: comment.id },
+                    _react2.default.createElement(
+                        'strong',
+                        null,
+                        comment.user.firstname,
+                        ' ',
+                        comment.user.lastname
+                    ),
+                    ' ',
+                    comment.text
+                );
+            });
+        }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
     _createClass(Story, [{
         key: 'render',
         value: function render() {
+            var story = this.state.story;
+            if (!story) {
+                return null;
+            }
+
+            var comments = this.state.comments;
+            var likes = this.state.likes;
+
             return _react2.default.createElement(
                 'div',
                 { className: 'site-wrap' },
@@ -37,11 +115,11 @@ var Story = function (_React$Component) {
                     _react2.default.createElement(
                         'div',
                         { className: 'heroimage' },
-                        _react2.default.createElement('img', { src: 'images/dummy06.jpg' }),
+                        _react2.default.createElement('img', { src: story.image_url }),
                         _react2.default.createElement(
                             'h2',
                             null,
-                            'La Concordia'
+                            story.name
                         )
                     ),
                     _react2.default.createElement(
@@ -50,11 +128,13 @@ var Story = function (_React$Component) {
                         _react2.default.createElement(
                             'div',
                             { className: 'userprofile' },
-                            _react2.default.createElement('img', { src: 'images/matteo.jpg' }),
+                            _react2.default.createElement('img', { src: story.user.image_url }),
                             _react2.default.createElement(
                                 'h6',
                                 null,
-                                'Matteo'
+                                story.user.firstname,
+                                ' ',
+                                story.user.lastname
                             )
                         ),
                         _react2.default.createElement(
@@ -63,9 +143,10 @@ var Story = function (_React$Component) {
                             _react2.default.createElement(
                                 'p',
                                 null,
-                                '40 likes'
+                                likes,
+                                ' likes'
                             ),
-                            _react2.default.createElement('img', { src: 'images/icon_love.png' }),
+                            _react2.default.createElement('img', { src: 'images/icon_love.png', onClick: this.like }),
                             _react2.default.createElement('img', { src: 'images/icon_share.png' })
                         ),
                         _react2.default.createElement(
@@ -74,7 +155,7 @@ var Story = function (_React$Component) {
                             _react2.default.createElement(
                                 'p',
                                 null,
-                                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec enim dolor, facilisis id interdum id, gravida eget lacus. Nam congue urna massa, sit amet rutrum ipsum pellentesque eu. Praesent et '
+                                story.description
                             )
                         )
                     ),
@@ -82,21 +163,12 @@ var Story = function (_React$Component) {
                     _react2.default.createElement(
                         'div',
                         { className: 'usercomment' },
-                        _react2.default.createElement(
-                            'p',
-                            null,
-                            'User Name and User Comment 01'
-                        ),
-                        _react2.default.createElement(
-                            'p',
-                            null,
-                            'User Name and User Comment 02'
-                        )
+                        this.comments()
                     ),
                     _react2.default.createElement(
-                        'div',
-                        { className: 'comment' },
-                        _react2.default.createElement('input', { placeholder: 'add a comment', type: 'text' }),
+                        'form',
+                        { className: 'comment', onSubmit: this.comment },
+                        _react2.default.createElement('input', { placeholder: 'add a comment', type: 'text', name: 'text' }),
                         _react2.default.createElement(
                             'button',
                             null,
@@ -105,6 +177,24 @@ var Story = function (_React$Component) {
                     )
                 )
             );
+        }
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            var storyID = this.props.params.storyID;
+
+            _API2.default.getStory({ storyID: storyID }, function (story) {
+                _this2.setState({ story: story });
+            }, function (response) {
+                alert('Failed to get most story');
+            });
+
+            this.getLikes(storyID);
+            this.getComments(storyID);
+
+            _API2.default.viewStory({ 'story-id': storyID });
         }
     }]);
 

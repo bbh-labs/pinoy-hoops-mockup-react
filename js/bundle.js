@@ -58,47 +58,63 @@
 
 	var _reactRouter = __webpack_require__(168);
 
-	var _About = __webpack_require__(229);
+	var _Dispatcher = __webpack_require__(229);
+
+	var _Dispatcher2 = _interopRequireDefault(_Dispatcher);
+
+	var _API = __webpack_require__(233);
+
+	var _API2 = _interopRequireDefault(_API);
+
+	var _About = __webpack_require__(235);
 
 	var _About2 = _interopRequireDefault(_About);
 
-	var _Activities = __webpack_require__(230);
+	var _Activities = __webpack_require__(236);
 
 	var _Activities2 = _interopRequireDefault(_Activities);
 
-	var _AddHoop = __webpack_require__(231);
+	var _AddHoop = __webpack_require__(237);
 
 	var _AddHoop2 = _interopRequireDefault(_AddHoop);
 
-	var _Home = __webpack_require__(233);
+	var _Home = __webpack_require__(238);
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _Hoop = __webpack_require__(235);
+	var _Hoop = __webpack_require__(239);
 
 	var _Hoop2 = _interopRequireDefault(_Hoop);
 
-	var _Login = __webpack_require__(236);
+	var _Login = __webpack_require__(240);
 
 	var _Login2 = _interopRequireDefault(_Login);
 
-	var _Map = __webpack_require__(237);
+	var _Map = __webpack_require__(241);
 
 	var _Map2 = _interopRequireDefault(_Map);
 
-	var _Navigation = __webpack_require__(238);
+	var _Navigation = __webpack_require__(242);
 
 	var _Navigation2 = _interopRequireDefault(_Navigation);
 
-	var _Profile = __webpack_require__(239);
+	var _Profile = __webpack_require__(243);
 
 	var _Profile2 = _interopRequireDefault(_Profile);
 
-	var _Signup = __webpack_require__(240);
+	var _Share = __webpack_require__(247);
+
+	var _Share2 = _interopRequireDefault(_Share);
+
+	var _Signup = __webpack_require__(244);
 
 	var _Signup2 = _interopRequireDefault(_Signup);
 
-	var _Story = __webpack_require__(241);
+	var _SocialLogin = __webpack_require__(245);
+
+	var _SocialLogin2 = _interopRequireDefault(_SocialLogin);
+
+	var _Story = __webpack_require__(246);
 
 	var _Story2 = _interopRequireDefault(_Story);
 
@@ -114,22 +130,67 @@
 	    _inherits(App, _React$Component);
 
 	    function App() {
+	        var _Object$getPrototypeO;
+
+	        var _temp, _this, _ret;
+
 	        _classCallCheck(this, App);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(App).apply(this, arguments));
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
+
+	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(App)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+	            user: null
+	        }, _temp), _possibleConstructorReturn(_this, _ret);
 	    }
 
 	    _createClass(App, [{
 	        key: 'render',
 	        value: function render() {
+	            var showNavigation = true;
+
+	            if (this.props.location.pathname == '/') {
+	                showNavigation = false;
+	            }
+
 	            return _react2.default.createElement(
 	                'div',
 	                { id: 'app' },
-	                _react2.default.createElement(_Navigation2.default, null),
-	                _react2.default.createElement('input', { type: 'checkbox', id: 'nav-trigger', className: 'nav-trigger' }),
-	                _react2.default.createElement('label', { htmlFor: 'nav-trigger' }),
-	                this.props.children
+	                showNavigation ? _react2.default.createElement(_Navigation2.default, this.state) : null,
+	                showNavigation ? _react2.default.createElement('input', { type: 'checkbox', id: 'nav-trigger', className: 'nav-trigger' }) : null,
+	                showNavigation ? _react2.default.createElement('label', { htmlFor: 'nav-trigger' }) : null,
+	                this.props.children && _react2.default.cloneElement(this.props.children, this.state)
 	            );
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _this2 = this;
+
+	            this.checkLoggedIn();
+
+	            this.dispatcherID = _Dispatcher2.default.register(function (payload) {
+	                switch (payload.type) {
+	                    case 'refresh-user':
+	                        _this2.checkLoggedIn();
+
+	                        if (payload.goto) _reactRouter.hashHistory.replace(payload.goto);
+
+	                        break;
+	                }
+	            });
+	        }
+	    }, {
+	        key: 'checkLoggedIn',
+	        value: function checkLoggedIn() {
+	            var _this3 = this;
+
+	            _API2.default.isLoggedIn(function (user) {
+	                _this3.setState({ user: user });
+	            }, function () {
+	                _this3.setState({ user: null });
+	            });
 	        }
 	    }]);
 
@@ -146,12 +207,14 @@
 	        _react2.default.createElement(_reactRouter.Route, { path: '/about', component: _About2.default }),
 	        _react2.default.createElement(_reactRouter.Route, { path: '/activities', component: _Activities2.default }),
 	        _react2.default.createElement(_reactRouter.Route, { path: '/add-hoop', component: _AddHoop2.default }),
-	        _react2.default.createElement(_reactRouter.Route, { path: '/hoop', component: _Hoop2.default }),
+	        _react2.default.createElement(_reactRouter.Route, { path: '/hoop/:hoopID', component: _Hoop2.default }),
+	        _react2.default.createElement(_reactRouter.Route, { path: '/social-login', component: _SocialLogin2.default }),
 	        _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _Login2.default }),
 	        _react2.default.createElement(_reactRouter.Route, { path: '/map', component: _Map2.default }),
 	        _react2.default.createElement(_reactRouter.Route, { path: '/profile', component: _Profile2.default }),
 	        _react2.default.createElement(_reactRouter.Route, { path: '/signup', component: _Signup2.default }),
-	        _react2.default.createElement(_reactRouter.Route, { path: '/story', component: _Story2.default })
+	        _react2.default.createElement(_reactRouter.Route, { path: '/story/:storyID', component: _Story2.default }),
+	        _react2.default.createElement(_reactRouter.Route, { path: '/story/:storyID/share', component: _Share2.default })
 	    )
 	), document.getElementById('root'));
 
@@ -25940,389 +26003,321 @@
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _flux = __webpack_require__(230);
 
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
+	var _flux2 = _interopRequireDefault(_flux);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var About = function (_React$Component) {
-	    _inherits(About, _React$Component);
-
-	    function About() {
-	        _classCallCheck(this, About);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(About).apply(this, arguments));
-	    }
-
-	    _createClass(About, [{
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                { className: 'site-wrap' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'about' },
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'csslider' },
-	                        _react2.default.createElement('input', { type: 'radio', name: 'slides', id: 'slides_1', defaultChecked: true }),
-	                        _react2.default.createElement('input', { type: 'radio', name: 'slides', id: 'slides_2' }),
-	                        _react2.default.createElement('input', { type: 'radio', name: 'slides', id: 'slides_3' }),
-	                        _react2.default.createElement('input', { type: 'radio', name: 'slides', id: 'slides_4' }),
-	                        _react2.default.createElement('input', { type: 'radio', name: 'slides', id: 'slides_N' }),
-	                        _react2.default.createElement(
-	                            'ul',
-	                            null,
-	                            _react2.default.createElement(
-	                                'li',
-	                                null,
-	                                _react2.default.createElement('img', { src: 'images/about01.jpg' }),
-	                                _react2.default.createElement(
-	                                    'h3',
-	                                    null,
-	                                    'About',
-	                                    _react2.default.createElement('br', null),
-	                                    ' Pinoy Hoop'
-	                                ),
-	                                _react2.default.createElement(
-	                                    'p',
-	                                    null,
-	                                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor mi, ultrices eu vulputate eu, bibendum et ipsum. In sed sollicitudin mi,'
-	                                )
-	                            ),
-	                            _react2.default.createElement(
-	                                'li',
-	                                null,
-	                                _react2.default.createElement('img', { src: 'images/about02.jpg' })
-	                            ),
-	                            _react2.default.createElement(
-	                                'li',
-	                                null,
-	                                _react2.default.createElement('img', { src: 'images/about03.jpg' })
-	                            )
-	                        ),
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'dots' },
-	                            _react2.default.createElement(
-	                                'div',
-	                                null,
-	                                _react2.default.createElement('label', { htmlFor: 'slides_1' }),
-	                                _react2.default.createElement('label', { htmlFor: 'slides_2' }),
-	                                _react2.default.createElement('label', { htmlFor: 'slides_3' })
-	                            )
-	                        )
-	                    )
-	                )
-	            );
-	        }
-	    }]);
-
-	    return About;
-	}(_react2.default.Component);
-
-	module.exports = About;
+	module.exports = new _flux2.default.Dispatcher();
 
 /***/ },
 /* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	/**
+	 * Copyright (c) 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	module.exports.Dispatcher = __webpack_require__(231);
 
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(168);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Activities = function (_React$Component) {
-	    _inherits(Activities, _React$Component);
-
-	    function Activities() {
-	        _classCallCheck(this, Activities);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Activities).apply(this, arguments));
-	    }
-
-	    _createClass(Activities, [{
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                { className: 'site-wrap' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'activities' },
-	                    _react2.default.createElement(
-	                        'ul',
-	                        null,
-	                        _react2.default.createElement(Activity, null),
-	                        _react2.default.createElement(Activity, null),
-	                        _react2.default.createElement(Activity, null),
-	                        _react2.default.createElement(Activity, null),
-	                        _react2.default.createElement(Activity, null),
-	                        _react2.default.createElement(Activity, null)
-	                    )
-	                )
-	            );
-	        }
-	    }]);
-
-	    return Activities;
-	}(_react2.default.Component);
-
-	var Activity = function (_React$Component2) {
-	    _inherits(Activity, _React$Component2);
-
-	    function Activity() {
-	        _classCallCheck(this, Activity);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Activity).apply(this, arguments));
-	    }
-
-	    _createClass(Activity, [{
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'li',
-	                null,
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'userprofile' },
-	                    _react2.default.createElement(
-	                        'span',
-	                        { className: 'left' },
-	                        _react2.default.createElement('img', { src: 'images/zac.jpg' })
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'userfeeds' },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        'Activity data'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'userstory' },
-	                    _react2.default.createElement(
-	                        'span',
-	                        { className: 'right' },
-	                        _react2.default.createElement('img', { src: 'images/dummy06.jpg' })
-	                    )
-	                )
-	            );
-	        }
-	    }]);
-
-	    return Activity;
-	}(_react2.default.Component);
-
-	module.exports = Activities;
 
 /***/ },
 /* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright (c) 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule Dispatcher
+	 * 
+	 * @preventMunge
+	 */
+
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	exports.__esModule = true;
 
-	var _react = __webpack_require__(1);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _react2 = _interopRequireDefault(_react);
+	var invariant = __webpack_require__(232);
 
-	var _reactRouter = __webpack_require__(168);
+	var _prefix = 'ID_';
 
-	var _MapView = __webpack_require__(232);
+	/**
+	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
+	 * different from generic pub-sub systems in two ways:
+	 *
+	 *   1) Callbacks are not subscribed to particular events. Every payload is
+	 *      dispatched to every registered callback.
+	 *   2) Callbacks can be deferred in whole or part until other callbacks have
+	 *      been executed.
+	 *
+	 * For example, consider this hypothetical flight destination form, which
+	 * selects a default city when a country is selected:
+	 *
+	 *   var flightDispatcher = new Dispatcher();
+	 *
+	 *   // Keeps track of which country is selected
+	 *   var CountryStore = {country: null};
+	 *
+	 *   // Keeps track of which city is selected
+	 *   var CityStore = {city: null};
+	 *
+	 *   // Keeps track of the base flight price of the selected city
+	 *   var FlightPriceStore = {price: null}
+	 *
+	 * When a user changes the selected city, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'city-update',
+	 *     selectedCity: 'paris'
+	 *   });
+	 *
+	 * This payload is digested by `CityStore`:
+	 *
+	 *   flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'city-update') {
+	 *       CityStore.city = payload.selectedCity;
+	 *     }
+	 *   });
+	 *
+	 * When the user selects a country, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'country-update',
+	 *     selectedCountry: 'australia'
+	 *   });
+	 *
+	 * This payload is digested by both stores:
+	 *
+	 *   CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       CountryStore.country = payload.selectedCountry;
+	 *     }
+	 *   });
+	 *
+	 * When the callback to update `CountryStore` is registered, we save a reference
+	 * to the returned token. Using this token with `waitFor()`, we can guarantee
+	 * that `CountryStore` is updated before the callback that updates `CityStore`
+	 * needs to query its data.
+	 *
+	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       // `CountryStore.country` may not be updated.
+	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
+	 *       // `CountryStore.country` is now guaranteed to be updated.
+	 *
+	 *       // Select the default city for the new country
+	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
+	 *     }
+	 *   });
+	 *
+	 * The usage of `waitFor()` can be chained, for example:
+	 *
+	 *   FlightPriceStore.dispatchToken =
+	 *     flightDispatcher.register(function(payload) {
+	 *       switch (payload.actionType) {
+	 *         case 'country-update':
+	 *         case 'city-update':
+	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
+	 *           FlightPriceStore.price =
+	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
+	 *           break;
+	 *     }
+	 *   });
+	 *
+	 * The `country-update` payload will be guaranteed to invoke the stores'
+	 * registered callbacks in order: `CountryStore`, `CityStore`, then
+	 * `FlightPriceStore`.
+	 */
 
-	var _MapView2 = _interopRequireDefault(_MapView);
+	var Dispatcher = (function () {
+	  function Dispatcher() {
+	    _classCallCheck(this, Dispatcher);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	    this._callbacks = {};
+	    this._isDispatching = false;
+	    this._isHandled = {};
+	    this._isPending = {};
+	    this._lastID = 1;
+	  }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	  /**
+	   * Registers a callback to be invoked with every dispatched payload. Returns
+	   * a token that can be used with `waitFor()`.
+	   */
 
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	  Dispatcher.prototype.register = function register(callback) {
+	    var id = _prefix + this._lastID++;
+	    this._callbacks[id] = callback;
+	    return id;
+	  };
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	  /**
+	   * Removes a callback based on its token.
+	   */
 
-	var AddHoop = function (_React$Component) {
-	    _inherits(AddHoop, _React$Component);
+	  Dispatcher.prototype.unregister = function unregister(id) {
+	    !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+	    delete this._callbacks[id];
+	  };
 
-	    function AddHoop() {
-	        _classCallCheck(this, AddHoop);
+	  /**
+	   * Waits for the callbacks specified to be invoked before continuing execution
+	   * of the current callback. This method should only be used by a callback in
+	   * response to a dispatched payload.
+	   */
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(AddHoop).apply(this, arguments));
+	  Dispatcher.prototype.waitFor = function waitFor(ids) {
+	    !this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : invariant(false) : undefined;
+	    for (var ii = 0; ii < ids.length; ii++) {
+	      var id = ids[ii];
+	      if (this._isPending[id]) {
+	        !this._isHandled[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : invariant(false) : undefined;
+	        continue;
+	      }
+	      !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+	      this._invokeCallback(id);
 	    }
+	  };
 
-	    _createClass(AddHoop, [{
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                { className: 'site-wrap' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'addhoop' },
-	                    _react2.default.createElement(_MapView2.default, null),
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'content' },
-	                        _react2.default.createElement(
-	                            'h3',
-	                            null,
-	                            'Double tap on the map to add a hoop'
-	                        ),
-	                        _react2.default.createElement(
-	                            'form',
-	                            null,
-	                            _react2.default.createElement(
-	                                'label',
-	                                null,
-	                                'Hoop name: '
-	                            ),
-	                            _react2.default.createElement('input', { type: 'text', name: 'hname' }),
-	                            _react2.default.createElement('br', null),
-	                            _react2.default.createElement(
-	                                'label',
-	                                null,
-	                                'Hoop description: '
-	                            ),
-	                            _react2.default.createElement('textarea', { rows: '6', cols: '20' }),
-	                            _react2.default.createElement('br', null),
-	                            _react2.default.createElement(
-	                                'label',
-	                                null,
-	                                'Upload picture: '
-	                            ),
-	                            _react2.default.createElement(
-	                                'button',
-	                                null,
-	                                'Select file'
-	                            ),
-	                            _react2.default.createElement('br', null)
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'submit' },
-	                        _react2.default.createElement(
-	                            'button',
-	                            null,
-	                            'Cancel'
-	                        ),
-	                        _react2.default.createElement(
-	                            'button',
-	                            { style: { backgroundColor: '#ff6b00' } },
-	                            'Save'
-	                        )
-	                    )
-	                )
-	            );
+	  /**
+	   * Dispatches a payload to all registered callbacks.
+	   */
+
+	  Dispatcher.prototype.dispatch = function dispatch(payload) {
+	    !!this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : invariant(false) : undefined;
+	    this._startDispatching(payload);
+	    try {
+	      for (var id in this._callbacks) {
+	        if (this._isPending[id]) {
+	          continue;
 	        }
-	    }]);
+	        this._invokeCallback(id);
+	      }
+	    } finally {
+	      this._stopDispatching();
+	    }
+	  };
 
-	    return AddHoop;
-	}(_react2.default.Component);
+	  /**
+	   * Is this Dispatcher currently dispatching.
+	   */
 
-	module.exports = AddHoop;
+	  Dispatcher.prototype.isDispatching = function isDispatching() {
+	    return this._isDispatching;
+	  };
+
+	  /**
+	   * Call the callback stored with the given id. Also do some internal
+	   * bookkeeping.
+	   *
+	   * @internal
+	   */
+
+	  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
+	    this._isPending[id] = true;
+	    this._callbacks[id](this._pendingPayload);
+	    this._isHandled[id] = true;
+	  };
+
+	  /**
+	   * Set up bookkeeping needed when dispatching.
+	   *
+	   * @internal
+	   */
+
+	  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
+	    for (var id in this._callbacks) {
+	      this._isPending[id] = false;
+	      this._isHandled[id] = false;
+	    }
+	    this._pendingPayload = payload;
+	    this._isDispatching = true;
+	  };
+
+	  /**
+	   * Clear bookkeeping used for dispatching.
+	   *
+	   * @internal
+	   */
+
+	  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
+	    delete this._pendingPayload;
+	    this._isDispatching = false;
+	  };
+
+	  return Dispatcher;
+	})();
+
+	module.exports = Dispatcher;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
 /* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule invariant
+	 */
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	"use strict";
 
-	var _react = __webpack_require__(1);
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
 
-	var _react2 = _interopRequireDefault(_react);
+	var invariant = function (condition, format, a, b, c, d, e, f) {
+	  if (process.env.NODE_ENV !== 'production') {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
 
-	var _reactRouter = __webpack_require__(168);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var MapView = function (_React$Component) {
-	    _inherits(MapView, _React$Component);
-
-	    function MapView() {
-	        _classCallCheck(this, MapView);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(MapView).apply(this, arguments));
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
+	        return args[argIndex++];
+	      }));
 	    }
 
-	    _createClass(MapView, [{
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement('div', { id: 'map' });
-	        }
-	    }, {
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            // Basic options for a simple Google Map
-	            // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
-	            var mapOptions = {
-	                // How zoomed in you want the map to start at (always required)
-	                zoom: 13,
-	                scrollwheel: false,
-	                // The latitude and longitude to center the map (always required)
-	                center: new google.maps.LatLng(14.5980, 120.9446), // Manila
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
 
-	                // How you would like to style the map.
-	                // This is where you would paste any style found on Snazzy Maps.
-	                styles: [{ "featureType": "all", "elementType": "labels.text.fill", "stylers": [{ "saturation": 36 }, { "color": "#333333" }, { "lightness": 40 }] }, { "featureType": "all", "elementType": "labels.text.stroke", "stylers": [{ "visibility": "on" }, { "color": "#ffffff" }, { "lightness": 16 }] }, { "featureType": "all", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "administrative", "elementType": "geometry.fill", "stylers": [{ "color": "#fefefe" }, { "lightness": 20 }] }, { "featureType": "administrative", "elementType": "geometry.stroke", "stylers": [{ "color": "#fefefe" }, { "lightness": 17 }, { "weight": 1.2 }] }, { "featureType": "administrative", "elementType": "labels", "stylers": [{ "visibility": "simplified" }] }, { "featureType": "administrative.country", "elementType": "labels", "stylers": [{ "visibility": "simplified" }] }, { "featureType": "administrative.province", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "administrative.locality", "elementType": "labels", "stylers": [{ "visibility": "simplified" }] }, { "featureType": "administrative.neighborhood", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "administrative.land_parcel", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "color": "#e8e7e7" }, { "lightness": 20 }] }, { "featureType": "landscape", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "landscape.natural", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#f5f5f5" }, { "lightness": 21 }] }, { "featureType": "poi", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi.park", "elementType": "geometry", "stylers": [{ "color": "#dedede" }, { "lightness": 21 }] }, { "featureType": "road", "elementType": "all", "stylers": [{ "color": "#ff0000" }, { "visibility": "off" }] }, { "featureType": "road", "elementType": "geometry.fill", "stylers": [{ "color": "#ff0000" }, { "visibility": "off" }] }, { "featureType": "road", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "road.highway", "elementType": "geometry", "stylers": [{ "visibility": "simplified" }] }, { "featureType": "road.highway", "elementType": "geometry.fill", "stylers": [{ "color": "#ffffff" }, { "lightness": 17 }] }, { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{ "color": "#ffffff" }, { "lightness": 29 }, { "weight": 0.2 }] }, { "featureType": "road.highway.controlled_access", "elementType": "geometry", "stylers": [{ "visibility": "off" }] }, { "featureType": "road.arterial", "elementType": "geometry", "stylers": [{ "color": "#ffffff" }, { "lightness": 18 }, { "visibility": "simplified" }] }, { "featureType": "road.local", "elementType": "geometry", "stylers": [{ "color": "#ffffff" }, { "lightness": 16 }, { "visibility": "simplified" }] }, { "featureType": "transit", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "transit", "elementType": "geometry", "stylers": [{ "color": "#f2f2f2" }, { "lightness": 19 }] }, { "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#353537" }, { "lightness": 17 }] }]
-	            };
-
-	            // Create the Google Map using our element and options defined above
-	            this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
-
-	            // Let's also add a marker while we're at it
-	            var marker = new google.maps.Marker({
-	                position: new google.maps.LatLng(14.5980, 120.9446),
-	                map: this.map,
-	                title: 'Snazzy!'
-	            });
-	        }
-	    }, {
-	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {
-	            this.map = null;
-	        }
-	    }]);
-
-	    return MapView;
-	}(_react2.default.Component);
-
-	module.exports = MapView;
+	module.exports = invariant;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
 /* 233 */
@@ -26336,90 +26331,358 @@
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(168);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Home = function (_React$Component) {
-	    _inherits(Home, _React$Component);
-
-	    function Home() {
-	        _classCallCheck(this, Home);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Home).apply(this, arguments));
+	var API = function () {
+	    function API() {
+	        _classCallCheck(this, API);
 	    }
 
-	    _createClass(Home, [{
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'section',
-	                { className: 'landingpage' },
-	                _react2.default.createElement(
-	                    'div',
-	                    { id: 'slideshow' },
-	                    _react2.default.createElement(
-	                        'div',
-	                        null,
-	                        _react2.default.createElement('img', { src: 'images/landingpage/dummy01.jpg' })
-	                    ),
-	                    _react2.default.createElement(
-	                        'div',
-	                        null,
-	                        _react2.default.createElement('img', { src: 'images/landingpage/dummy02.jpg' })
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'logo' },
-	                    _react2.default.createElement(
-	                        _reactRouter.Link,
-	                        { to: '/' },
-	                        _react2.default.createElement('img', { src: 'images/logo_light.png', className: 'img-responsive' })
-	                    ),
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        'The home of all things basketball'
-	                    ),
-	                    _react2.default.createElement(
-	                        'button',
-	                        null,
-	                        'Enter'
-	                    )
-	                )
-	            );
+	    _createClass(API, null, [{
+	        key: 'login',
+	        value: function login(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/login',
+	                method: 'POST',
+	                data: data,
+	                processData: false,
+	                contentType: false
+	            }).done(done).fail(fail);
 	        }
 	    }, {
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            (0, _jquery2.default)("#slideshow > div:gt(0)").hide();
+	        key: 'signup',
+	        value: function signup(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/signup',
+	                method: 'POST',
+	                data: data,
+	                processData: false,
+	                contentType: false
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'isLoggedIn',
+	        value: function isLoggedIn(done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/login',
+	                method: 'GET',
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'logout',
+	        value: function logout(done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/logout',
+	                method: 'POST'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'updateUser',
+	        value: function updateUser(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/user',
+	                method: 'PATCH',
+	                data: data,
+	                processData: false,
+	                contentType: false
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'addHoop',
+	        value: function addHoop(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/hoop',
+	                method: 'POST',
+	                data: data,
+	                processData: false,
+	                contentType: false
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'addStory',
+	        value: function addStory(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/story',
+	                method: 'POST',
+	                data: data,
+	                processData: false,
+	                contentType: false
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getHoop',
+	        value: function getHoop(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/hoop',
+	                method: 'GET',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getHoops',
+	        value: function getHoops(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/hoops',
+	                method: 'GET',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getStory',
+	        value: function getStory(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/story',
+	                method: 'GET',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getStories',
+	        value: function getStories(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/stories',
+	                method: 'GET',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getActivities',
+	        value: function getActivities(done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/activities',
+	                method: 'GET',
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'likeHoop',
+	        value: function likeHoop(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/like/hoop',
+	                method: 'POST',
+	                data: data
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'likeStory',
+	        value: function likeStory(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/like/story',
+	                method: 'POST',
+	                data: data
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'comment',
+	        value: function comment(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/comment',
+	                method: 'POST',
+	                data: data
+	            }).done(done).fail(fail);
+	        }
 
-	            this.intervalID = setInterval(function () {
-	                (0, _jquery2.default)('#slideshow > div:first').fadeOut(1000).next().fadeIn(1000).end().appendTo('#slideshow');
-	            }, 5000);
+	        // Extra
+
+	    }, {
+	        key: 'getNearbyHoops',
+	        value: function getNearbyHoops(data, done, fail) {
+	            if (!API.geolocating) {
+	                if ('geolocation' in navigator) {
+	                    navigator.geolocation.getCurrentPosition(function (position) {
+	                        API.geolocating = false;
+
+	                        _jquery2.default.ajax({
+	                            url: '/api/hoops/nearby',
+	                            method: 'GET',
+	                            data: _jquery2.default.extend({
+	                                latitude: position.coords.latitude,
+	                                longitude: position.coords.longitude
+	                            }, data),
+	                            dataType: 'json'
+	                        }).done(done).fail(fail);
+	                    });
+
+	                    API.geolocating = true;
+	                } else {
+	                    alert('Sorry, your device or browser doesn\'t support geolocation!');
+	                }
+	            }
 	        }
 	    }, {
-	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {
-	            clearInterval(this.intervalID);
+	        key: 'getPopularHoops',
+	        value: function getPopularHoops(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/hoops/popular',
+	                method: 'GET',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getLatestHoops',
+	        value: function getLatestHoops(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/hoops/latest',
+	                method: 'GET',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getMostCommentedStories',
+	        value: function getMostCommentedStories(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/stories/mostcommented',
+	                method: 'GET',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getMostLikedStories',
+	        value: function getMostLikedStories(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/stories/mostliked',
+	                method: 'GET',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getMostViewedStories',
+	        value: function getMostViewedStories(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/stories/mostviewed',
+	                method: 'GET',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getLatestStories',
+	        value: function getLatestStories(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/stories/latest',
+	                method: 'GET',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getStoryComments',
+	        value: function getStoryComments(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/story/comments',
+	                method: 'GET',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getHoopLikes',
+	        value: function getHoopLikes(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/hoop/likes',
+	                method: 'GET',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getStoryLikes',
+	        value: function getStoryLikes(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/story/likes',
+	                method: 'GET',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'viewHoop',
+	        value: function viewHoop(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/view/hoop',
+	                method: 'PATCH',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'viewStory',
+	        value: function viewStory(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/view/story',
+	                method: 'PATCH',
+	                data: data,
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'commentStory',
+	        value: function commentStory(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/comment/story',
+	                method: 'PATCH',
+	                data: data
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'updateUserLastActivityCheckTime',
+	        value: function updateUserLastActivityCheckTime(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/user/lastactivitychecktime',
+	                method: 'PATCH',
+	                data: data
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getMyHoops',
+	        value: function getMyHoops(done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/user/myhoops',
+	                method: 'GET',
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'getOtherHoops',
+	        value: function getOtherHoops(done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/user/otherhoops',
+	                method: 'GET',
+	                dataType: 'json'
+	            }).done(done).fail(fail);
+	        }
+	    }, {
+	        key: 'updateUserImage',
+	        value: function updateUserImage(data, done, fail) {
+	            _jquery2.default.ajax({
+	                url: '/api/user/image',
+	                method: 'POST',
+	                data: data,
+	                processData: false,
+	                contentType: false
+	            }).done(done).fail(fail);
 	        }
 	    }]);
 
-	    return Home;
-	}(_react2.default.Component);
+	    return API;
+	}();
 
-	module.exports = Home;
+	API.BASE_URL = 'http://localhost:8080';
+	API.geolocating = false;
+
+
+	module.exports = API;
 
 /***/ },
 /* 234 */
@@ -36253,7 +36516,638 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var About = function (_React$Component) {
+	    _inherits(About, _React$Component);
+
+	    function About() {
+	        _classCallCheck(this, About);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(About).apply(this, arguments));
+	    }
+
+	    _createClass(About, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'site-wrap' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'about' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'csslider' },
+	                        _react2.default.createElement('input', { type: 'radio', name: 'slides', id: 'slides_1', defaultChecked: true }),
+	                        _react2.default.createElement('input', { type: 'radio', name: 'slides', id: 'slides_2' }),
+	                        _react2.default.createElement('input', { type: 'radio', name: 'slides', id: 'slides_3' }),
+	                        _react2.default.createElement('input', { type: 'radio', name: 'slides', id: 'slides_4' }),
+	                        _react2.default.createElement('input', { type: 'radio', name: 'slides', id: 'slides_N' }),
+	                        _react2.default.createElement(
+	                            'ul',
+	                            null,
+	                            _react2.default.createElement(
+	                                'li',
+	                                null,
+	                                _react2.default.createElement('img', { src: 'images/about01.jpg' }),
+	                                _react2.default.createElement(
+	                                    'h3',
+	                                    null,
+	                                    'About',
+	                                    _react2.default.createElement('br', null),
+	                                    ' Pinoy Hoop'
+	                                ),
+	                                _react2.default.createElement(
+	                                    'p',
+	                                    null,
+	                                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor mi, ultrices eu vulputate eu, bibendum et ipsum. In sed sollicitudin mi,'
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'li',
+	                                null,
+	                                _react2.default.createElement('img', { src: 'images/about02.jpg' })
+	                            ),
+	                            _react2.default.createElement(
+	                                'li',
+	                                null,
+	                                _react2.default.createElement('img', { src: 'images/about03.jpg' })
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'dots' },
+	                            _react2.default.createElement(
+	                                'div',
+	                                null,
+	                                _react2.default.createElement('label', { htmlFor: 'slides_1' }),
+	                                _react2.default.createElement('label', { htmlFor: 'slides_2' }),
+	                                _react2.default.createElement('label', { htmlFor: 'slides_3' })
+	                            )
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return About;
+	}(_react2.default.Component);
+
+	module.exports = About;
+
+/***/ },
+/* 236 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
 	var _reactRouter = __webpack_require__(168);
+
+	var _API = __webpack_require__(233);
+
+	var _API2 = _interopRequireDefault(_API);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ACTIVITY_POST_HOOP = 1,
+	    ACTIVITY_POST_STORY = 2,
+	    ACTIVITY_POST_COMMENT_HOOP = 101,
+	    ACTIVITY_POST_COMMENT_STORY = 102,
+	    ACTIVITY_POST_LIKE_HOOP = 201,
+	    ACTIVITY_POST_LIKE_STORY = 202;
+
+	var Activities = function (_React$Component) {
+	    _inherits(Activities, _React$Component);
+
+	    function Activities() {
+	        var _Object$getPrototypeO;
+
+	        var _temp, _this, _ret;
+
+	        _classCallCheck(this, Activities);
+
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
+
+	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Activities)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+	            activities: null
+	        }, _this.getActivities = function () {
+	            _API2.default.getActivities(function (activities) {
+	                _this.setState({ activities: activities });
+	            }, function (response) {
+	                alert('Failed to get activities');
+	            });
+	        }, _temp), _possibleConstructorReturn(_this, _ret);
+	    }
+
+	    _createClass(Activities, [{
+	        key: 'render',
+	        value: function render() {
+	            var activities = this.state.activities;
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'site-wrap' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'activities' },
+	                    _react2.default.createElement(
+	                        'ul',
+	                        null,
+	                        this.activities()
+	                    )
+	                )
+	            );
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.getActivities();
+	        }
+	    }, {
+	        key: 'activities',
+	        value: function activities() {
+	            var activities = this.state.activities;
+	            if (!activities) {
+	                return null;
+	            }
+
+	            return activities.map(function (activity, i) {
+	                return _react2.default.createElement(Activity, { key: i, activity: activity });
+	            });
+	        }
+	    }]);
+
+	    return Activities;
+	}(_react2.default.Component);
+
+	var Activity = function (_React$Component2) {
+	    _inherits(Activity, _React$Component2);
+
+	    function Activity() {
+	        _classCallCheck(this, Activity);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Activity).apply(this, arguments));
+	    }
+
+	    _createClass(Activity, [{
+	        key: 'render',
+	        value: function render() {
+	            var activity = this.props.activity;
+	            var user = activity.data.user;
+	            var story = activity.data.story;
+	            var hoop = activity.data.hoop;
+
+	            return _react2.default.createElement(
+	                'li',
+	                null,
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'userprofile' },
+	                    _react2.default.createElement(
+	                        'span',
+	                        { className: 'left' },
+	                        _react2.default.createElement('img', { src: user.image_url })
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'userfeeds' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        user.firstname,
+	                        ' ',
+	                        user.lastname,
+	                        ' ',
+	                        this.action(),
+	                        ' '
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'userstory' },
+	                    story ? _react2.default.createElement(
+	                        'span',
+	                        { className: 'right' },
+	                        _react2.default.createElement('img', { src: story.image_url })
+	                    ) : hoop ? _react2.default.createElement(
+	                        'span',
+	                        { className: 'right' },
+	                        _react2.default.createElement('img', { src: hoop.data.featured_story.image_url })
+	                    ) : null
+	                )
+	            );
+	        }
+	    }, {
+	        key: 'action',
+	        value: function action() {
+	            var activity = this.props.activity;
+	            var hoop = activity.data.hoop;
+	            var story = activity.data.story;
+
+	            switch (activity.type) {
+	                case ACTIVITY_POST_HOOP:
+	                    return 'posted hoop \'' + hoop.name + '\'';
+
+	                case ACTIVITY_POST_STORY:
+	                    return 'posted story \'' + story.name + '\'';
+
+	                case ACTIVITY_POST_COMMENT_HOOP:
+	                    return 'posted comment on \'' + hoop.name + '\'';
+
+	                case ACTIVITY_POST_COMMENT_STORY:
+	                    return 'posted comment on \'' + story.name + '\'';
+
+	                case ACTIVITY_POST_LIKE_HOOP:
+	                    return 'liked hoop \'' + hoop.name + '\'';
+
+	                case ACTIVITY_POST_LIKE_STORY:
+	                    return 'liked story \'' + story.name + '\'';
+	            }
+	        }
+	    }]);
+
+	    return Activity;
+	}(_react2.default.Component);
+
+	module.exports = Activities;
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(168);
+
+	var _API = __webpack_require__(233);
+
+	var _API2 = _interopRequireDefault(_API);
+
+	var _Dispatcher = __webpack_require__(229);
+
+	var _Dispatcher2 = _interopRequireDefault(_Dispatcher);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var AddHoop = function (_React$Component) {
+	    _inherits(AddHoop, _React$Component);
+
+	    function AddHoop() {
+	        var _Object$getPrototypeO;
+
+	        var _temp, _this, _ret;
+
+	        _classCallCheck(this, AddHoop);
+
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
+
+	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(AddHoop)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+	            latlng: null
+	        }, _temp), _possibleConstructorReturn(_this, _ret);
+	    }
+
+	    _createClass(AddHoop, [{
+	        key: 'render',
+	        value: function render() {
+	            var latlng = this.state.latlng;
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'site-wrap' },
+	                _react2.default.createElement(
+	                    'form',
+	                    { className: 'addhoop', onSubmit: this.submit },
+	                    _react2.default.createElement(MapView, { onDoubleClick: this.setCoordinate }),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'content' },
+	                        _react2.default.createElement(
+	                            'h3',
+	                            null,
+	                            'Double tap on the map to add a hoop'
+	                        ),
+	                        _react2.default.createElement(
+	                            'div',
+	                            null,
+	                            _react2.default.createElement(
+	                                'label',
+	                                null,
+	                                'Hoop name: '
+	                            ),
+	                            _react2.default.createElement('input', { type: 'text', name: 'name' }),
+	                            _react2.default.createElement('br', null),
+	                            _react2.default.createElement(
+	                                'label',
+	                                null,
+	                                'Hoop description: '
+	                            ),
+	                            _react2.default.createElement('textarea', { rows: '6', cols: '20', name: 'description' }),
+	                            _react2.default.createElement('br', null),
+	                            _react2.default.createElement(
+	                                'label',
+	                                null,
+	                                'Upload picture: '
+	                            ),
+	                            _react2.default.createElement(
+	                                'label',
+	                                { htmlFor: 'upload-image' },
+	                                'Select file',
+	                                _react2.default.createElement('input', { id: 'upload-image', type: 'file', name: 'image' })
+	                            ),
+	                            _react2.default.createElement('br', null),
+	                            _react2.default.createElement('input', { type: 'hidden', name: 'latitude', value: latlng ? latlng.lat : 0 }),
+	                            _react2.default.createElement('input', { type: 'hidden', name: 'longitude', value: latlng ? latlng.lng : 0 })
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'submit' },
+	                        _react2.default.createElement(
+	                            'button',
+	                            { onClick: this.cancel },
+	                            'Cancel'
+	                        ),
+	                        _react2.default.createElement(
+	                            'button',
+	                            { type: 'submit', style: { backgroundColor: '#ff6b00' } },
+	                            'Save'
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _this2 = this;
+
+	            this.listenerID = _Dispatcher2.default.register(function (payload) {
+	                switch (payload.type) {
+	                    case 'map-click':
+	                        _this2.setState({ latlng: { lat: payload.latlng.lat(), lng: payload.latlng.lng() } });
+	                        break;
+	                }
+	            });
+	        }
+	    }, {
+	        key: 'comonentWillUnmount',
+	        value: function comonentWillUnmount() {
+	            _Dispatcher2.default.unregister(this.listenerID);
+	        }
+	    }, {
+	        key: 'submit',
+	        value: function submit(event) {
+	            event.preventDefault();
+
+	            _API2.default.addHoop(new FormData(event.target), function () {
+	                alert('Successfully added hoop!');
+	                _Dispatcher2.default.dispatch({ type: 'get-hoops' });
+	                _Dispatcher2.default.dispatch({ type: 'get-activities' });
+	                _reactRouter.hashHistory.replace('/map');
+	            }, function (response) {
+	                alert(response.statusText);
+	            });
+	        }
+	    }, {
+	        key: 'cancel',
+	        value: function cancel() {
+	            _reactRouter.hashHistory.replace('/map');
+	        }
+	    }]);
+
+	    return AddHoop;
+	}(_react2.default.Component);
+
+	var MapView = function (_React$Component2) {
+	    _inherits(MapView, _React$Component2);
+
+	    function MapView() {
+	        _classCallCheck(this, MapView);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(MapView).apply(this, arguments));
+	    }
+
+	    _createClass(MapView, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement('div', { id: 'map' });
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _this4 = this;
+
+	            // Basic options for a simple Google Map
+	            // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
+	            var mapOptions = {
+	                // How zoomed in you want the map to start at (always required)
+	                zoom: 13,
+	                scrollwheel: false,
+	                // The latitude and longitude to center the map (always required)
+	                center: new google.maps.LatLng(14.5980, 120.9446), // Manila
+
+	                // How you would like to style the map.
+	                // This is where you would paste any style found on Snazzy Maps.
+	                styles: [{ "featureType": "all", "elementType": "labels.text.fill", "stylers": [{ "saturation": 36 }, { "color": "#333333" }, { "lightness": 40 }] }, { "featureType": "all", "elementType": "labels.text.stroke", "stylers": [{ "visibility": "on" }, { "color": "#ffffff" }, { "lightness": 16 }] }, { "featureType": "all", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "administrative", "elementType": "geometry.fill", "stylers": [{ "color": "#fefefe" }, { "lightness": 20 }] }, { "featureType": "administrative", "elementType": "geometry.stroke", "stylers": [{ "color": "#fefefe" }, { "lightness": 17 }, { "weight": 1.2 }] }, { "featureType": "administrative", "elementType": "labels", "stylers": [{ "visibility": "simplified" }] }, { "featureType": "administrative.country", "elementType": "labels", "stylers": [{ "visibility": "simplified" }] }, { "featureType": "administrative.province", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "administrative.locality", "elementType": "labels", "stylers": [{ "visibility": "simplified" }] }, { "featureType": "administrative.neighborhood", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "administrative.land_parcel", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "color": "#e8e7e7" }, { "lightness": 20 }] }, { "featureType": "landscape", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "landscape.natural", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#f5f5f5" }, { "lightness": 21 }] }, { "featureType": "poi", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi.park", "elementType": "geometry", "stylers": [{ "color": "#dedede" }, { "lightness": 21 }] }, { "featureType": "road", "elementType": "all", "stylers": [{ "color": "#ff0000" }, { "visibility": "off" }] }, { "featureType": "road", "elementType": "geometry.fill", "stylers": [{ "color": "#ff0000" }, { "visibility": "off" }] }, { "featureType": "road", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "road.highway", "elementType": "geometry", "stylers": [{ "visibility": "simplified" }] }, { "featureType": "road.highway", "elementType": "geometry.fill", "stylers": [{ "color": "#ffffff" }, { "lightness": 17 }] }, { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{ "color": "#ffffff" }, { "lightness": 29 }, { "weight": 0.2 }] }, { "featureType": "road.highway.controlled_access", "elementType": "geometry", "stylers": [{ "visibility": "off" }] }, { "featureType": "road.arterial", "elementType": "geometry", "stylers": [{ "color": "#ffffff" }, { "lightness": 18 }, { "visibility": "simplified" }] }, { "featureType": "road.local", "elementType": "geometry", "stylers": [{ "color": "#ffffff" }, { "lightness": 16 }, { "visibility": "simplified" }] }, { "featureType": "transit", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "transit", "elementType": "geometry", "stylers": [{ "color": "#f2f2f2" }, { "lightness": 19 }] }, { "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#353537" }, { "lightness": 17 }] }]
+	            };
+
+	            // Create the Google Map using our element and options defined above
+	            this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
+	            this.map.addListener('click', function (event) {
+	                _Dispatcher2.default.dispatch({ type: 'map-click', latlng: event.latLng });
+
+	                if (_this4.marker) {
+	                    _this4.marker.setMap(null);
+	                    _this4.marker = null;
+	                }
+
+	                _this4.marker = new google.maps.Marker({
+	                    position: new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()),
+	                    map: _this4.map,
+	                    title: 'Hoop'
+	                });
+	            });
+
+	            // Let's also add a marker while we're at it
+	            this.marker = new google.maps.Marker({
+	                position: new google.maps.LatLng(14.5980, 120.9446),
+	                map: this.map,
+	                title: 'Hoop'
+	            });
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            this.map = null;
+	            this.marker = null;
+	        }
+	    }]);
+
+	    return MapView;
+	}(_react2.default.Component);
+
+	module.exports = AddHoop;
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(234);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(168);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Home = function (_React$Component) {
+	    _inherits(Home, _React$Component);
+
+	    function Home() {
+	        _classCallCheck(this, Home);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Home).apply(this, arguments));
+	    }
+
+	    _createClass(Home, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'section',
+	                { className: 'landingpage' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { id: 'slideshow' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        null,
+	                        _react2.default.createElement('img', { src: 'images/landingpage/dummy01.jpg' })
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        null,
+	                        _react2.default.createElement('img', { src: 'images/landingpage/dummy02.jpg' })
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'logo' },
+	                    _react2.default.createElement(
+	                        _reactRouter.Link,
+	                        { to: '/' },
+	                        _react2.default.createElement('img', { src: 'images/logo_light.png', className: 'img-responsive' })
+	                    ),
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        'The home of all things basketball'
+	                    ),
+	                    _react2.default.createElement(
+	                        'button',
+	                        null,
+	                        'Enter'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'nav-arrow' },
+	                    _react2.default.createElement(
+	                        _reactRouter.Link,
+	                        { to: '/map' },
+	                        _react2.default.createElement('img', { src: 'images/landingpage/arrow.png' })
+	                    )
+	                )
+	            );
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            (0, _jquery2.default)("#slideshow > div:gt(0)").hide();
+
+	            this.intervalID = setInterval(function () {
+	                (0, _jquery2.default)('#slideshow > div:first').fadeOut(1000).next().fadeIn(1000).end().appendTo('#slideshow');
+	            }, 5000);
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            clearInterval(this.intervalID);
+	        }
+	    }]);
+
+	    return Home;
+	}(_react2.default.Component);
+
+	module.exports = Home;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(168);
+
+	var _API = __webpack_require__(233);
+
+	var _API2 = _interopRequireDefault(_API);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36267,14 +37161,39 @@
 	    _inherits(Hoop, _React$Component);
 
 	    function Hoop() {
+	        var _Object$getPrototypeO;
+
+	        var _temp, _this, _ret;
+
 	        _classCallCheck(this, Hoop);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Hoop).apply(this, arguments));
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
+
+	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Hoop)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+	            hoop: null,
+	            mostCommentedStories: null,
+	            mostLikedStories: null,
+	            mostViewedStories: null,
+	            latestStories: null,
+	            tab: 'most-recent'
+	        }, _this.setTab = function (tab) {
+	            _this.setState({ tab: tab });
+	        }, _this.addStory = function () {}, _temp), _possibleConstructorReturn(_this, _ret);
 	    }
 
 	    _createClass(Hoop, [{
 	        key: 'render',
 	        value: function render() {
+	            var hoop = this.state.hoop;
+	            if (!hoop) {
+	                return null;
+	            }
+
+	            var latestStories = this.state.latestStories;
+	            var tab = this.state.tab;
+
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'site-wrap' },
@@ -36284,11 +37203,11 @@
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'heroimage' },
-	                        _react2.default.createElement('img', { src: 'images/dummy08.jpg' }),
+	                        _react2.default.createElement('img', { src: latestStories ? latestStories[0].image_url : '' }),
 	                        _react2.default.createElement(
 	                            'h2',
 	                            null,
-	                            'La Concordia'
+	                            hoop.title
 	                        )
 	                    ),
 	                    _react2.default.createElement(
@@ -36297,11 +37216,13 @@
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 'userprofile' },
-	                            _react2.default.createElement('img', { src: 'images/zac.jpg' }),
+	                            _react2.default.createElement('img', { src: hoop.user.image_url }),
 	                            _react2.default.createElement(
 	                                'h6',
 	                                null,
-	                                'Zac Ong'
+	                                hoop.user.firstname,
+	                                ' ',
+	                                hoop.user.lastname
 	                            )
 	                        ),
 	                        _react2.default.createElement(
@@ -36324,13 +37245,18 @@
 	                        { className: 'filter' },
 	                        _react2.default.createElement(
 	                            'p',
-	                            { style: { color: '#ff6b00' } },
+	                            { onClick: this.setTab.bind(this, 'most-recent'), style: { color: tab == 'most-recent' && '#ff6b00' } },
 	                            'Most Recent'
 	                        ),
 	                        _react2.default.createElement(
 	                            'p',
-	                            null,
+	                            { onClick: this.setTab.bind(this, 'most-liked'), style: { color: tab == 'most-liked' && '#ff6b00' } },
 	                            'Most Liked'
+	                        ),
+	                        _react2.default.createElement(
+	                            'p',
+	                            { onClick: this.setTab.bind(this, 'most-viewed'), style: { color: tab == 'most-viewed' && '#ff6b00' } },
+	                            'Most Viewed'
 	                        )
 	                    ),
 	                    _react2.default.createElement(
@@ -36339,55 +37265,112 @@
 	                        _react2.default.createElement(
 	                            'li',
 	                            null,
-	                            _react2.default.createElement('img', { src: 'images/icon_plus.png' })
-	                        ),
-	                        _react2.default.createElement(
-	                            'li',
-	                            null,
 	                            _react2.default.createElement(
-	                                _reactRouter.Link,
-	                                { to: '/story' },
-	                                _react2.default.createElement('img', { src: 'images/dummy02.jpg' })
+	                                'form',
+	                                { onSubmit: this.addStory },
+	                                _react2.default.createElement('img', { src: 'images/icon_plus.png' })
 	                            )
 	                        ),
-	                        _react2.default.createElement(
-	                            'li',
-	                            null,
-	                            _react2.default.createElement('img', { src: 'images/dummy03.jpg' })
-	                        ),
-	                        _react2.default.createElement(
-	                            'li',
-	                            null,
-	                            _react2.default.createElement('img', { src: 'images/dummy04.jpg' })
-	                        ),
-	                        _react2.default.createElement(
-	                            'li',
-	                            null,
-	                            _react2.default.createElement('img', { src: 'images/dummy05.jpg' })
-	                        ),
-	                        _react2.default.createElement(
-	                            'li',
-	                            null,
-	                            _react2.default.createElement('img', { src: 'images/dummy06.jpg' })
-	                        ),
-	                        _react2.default.createElement(
-	                            'li',
-	                            null,
-	                            _react2.default.createElement('img', { src: 'images/dummy07.jpg' })
-	                        ),
-	                        _react2.default.createElement(
-	                            'li',
-	                            null,
-	                            _react2.default.createElement('img', { src: 'images/dummy08.jpg' })
-	                        ),
-	                        _react2.default.createElement(
-	                            'li',
-	                            null,
-	                            _react2.default.createElement('img', { src: 'images/dummy09.jpg' })
-	                        )
+	                        this.stories()
 	                    )
 	                )
 	            );
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _this2 = this;
+
+	            var hoopID = this.props.params.hoopID;
+
+	            _API2.default.getHoop({ hoopID: hoopID }, function (hoop) {
+	                _this2.setState({ hoop: hoop });
+	            }, function (response) {
+	                alert('Failed to get hoop');
+	            });
+
+	            _API2.default.getMostCommentedStories({ hoop_id: hoopID }, function (stories) {
+	                _this2.setState({ mostCommentedStories: stories });
+	            }, function (response) {
+	                alert('Failed to get most commented stories');
+	            });
+
+	            _API2.default.getMostLikedStories({ hoop_id: hoopID }, function (stories) {
+	                _this2.setState({ mostLikedStories: stories });
+	            }, function (response) {
+	                alert('Failed to get most liked stories');
+	            });
+
+	            _API2.default.getMostViewedStories({ hoop_id: hoopID }, function (stories) {
+	                _this2.setState({ mostViewedStories: stories });
+	            }, function (response) {
+	                alert('Failed to get most viewed stories');
+	            });
+
+	            _API2.default.getLatestStories({ hoop_id: hoopID }, function (stories) {
+	                _this2.setState({ latestStories: stories });
+	            }, function (response) {
+	                alert('Failed to get latest stories');
+	            });
+	        }
+	    }, {
+	        key: 'stories',
+	        value: function stories() {
+	            var latestStories = this.state.latestStories;
+	            var mostViewedStories = this.state.mostViewedStories;
+	            var mostLikedStories = this.state.mostLikedStories;
+	            var mostCommentedStories = this.state.mostCommentedStories;
+
+	            switch (this.state.tab) {
+	                case 'most-recent':
+	                    return latestStories ? latestStories.map(function (story) {
+	                        return _react2.default.createElement(
+	                            'li',
+	                            { key: story.id },
+	                            _react2.default.createElement(
+	                                _reactRouter.Link,
+	                                { to: '/story/' + story.id },
+	                                _react2.default.createElement('img', { src: story.image_url })
+	                            )
+	                        );
+	                    }) : null;
+	                case 'most-viewed':
+	                    return mostViewedStories ? mostViewedStories.map(function (story) {
+	                        return _react2.default.createElement(
+	                            'li',
+	                            { key: story.id },
+	                            _react2.default.createElement(
+	                                _reactRouter.Link,
+	                                { to: '/story/' + story.id },
+	                                _react2.default.createElement('img', { src: story.image_url })
+	                            )
+	                        );
+	                    }) : null;
+	                case 'most-liked':
+	                    return mostLikedStories ? mostLikedStories.map(function (story) {
+	                        return _react2.default.createElement(
+	                            'li',
+	                            { key: story.id },
+	                            _react2.default.createElement(
+	                                _reactRouter.Link,
+	                                { to: '/story/' + story.id },
+	                                _react2.default.createElement('img', { src: story.image_url })
+	                            )
+	                        );
+	                    }) : null;
+	                case 'most-commented':
+	                    return mostCommentedStories ? mostCommentedStories.map(function (story) {
+	                        return _react2.default.createElement(
+	                            'li',
+	                            { key: story.id },
+	                            _react2.default.createElement(
+	                                _reactRouter.Link,
+	                                { to: '/story/' + story.id },
+	                                _react2.default.createElement('img', { src: story.image_url })
+	                            )
+	                        );
+	                    }) : null;
+	            }
 	        }
 	    }]);
 
@@ -36397,7 +37380,7 @@
 	module.exports = Hoop;
 
 /***/ },
-/* 236 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36409,6 +37392,14 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var _reactRouter = __webpack_require__(168);
+
+	var _API = __webpack_require__(233);
+
+	var _API2 = _interopRequireDefault(_API);
+
+	var _Dispatcher = __webpack_require__(229);
+
+	var _Dispatcher2 = _interopRequireDefault(_Dispatcher);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36443,41 +37434,41 @@
 	                            _reactRouter.Link,
 	                            { to: '/' },
 	                            _react2.default.createElement('img', { src: 'images/logo_light.png' })
-	                        ),
-	                        _react2.default.createElement(
-	                            'p',
-	                            null,
-	                            'The home of all things basketball'
 	                        )
 	                    ),
 	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'login-content' },
+	                        'form',
+	                        { className: 'login-email' },
 	                        _react2.default.createElement(
-	                            _reactRouter.Link,
-	                            { to: '/hoop' },
-	                            _react2.default.createElement(
-	                                'button',
-	                                { style: { backgroundColor: '#3c5a99' } },
-	                                'Login with Facebook'
-	                            )
+	                            'h4',
+	                            null,
+	                            'Login with email'
 	                        ),
+	                        _react2.default.createElement('input', { type: 'email', placeholder: 'Email', name: 'email' }),
+	                        _react2.default.createElement('br', null),
+	                        _react2.default.createElement('input', { type: 'password', placeholder: 'Password', name: 'password' }),
+	                        _react2.default.createElement('br', null),
 	                        _react2.default.createElement(
-	                            'a',
-	                            { href: '#' },
+	                            'form',
+	                            { method: 'POST', onSubmit: this.submit },
+	                            _react2.default.createElement(
+	                                'label',
+	                                null,
+	                                'Email: '
+	                            ),
+	                            _react2.default.createElement('input', { type: 'email', name: 'email' }),
+	                            _react2.default.createElement('br', null),
+	                            _react2.default.createElement(
+	                                'label',
+	                                null,
+	                                'Password: '
+	                            ),
+	                            _react2.default.createElement('input', { type: 'password', name: 'password' }),
+	                            _react2.default.createElement('br', null),
 	                            _react2.default.createElement(
 	                                'button',
-	                                { style: { backgroundColor: '#00abf1' } },
-	                                'Login with Twitter'
-	                            )
-	                        ),
-	                        _react2.default.createElement(
-	                            'a',
-	                            { href: '#' },
-	                            _react2.default.createElement(
-	                                'button',
-	                                { style: { backgroundColor: '#ff6b00' } },
-	                                'Login with Email'
+	                                { type: 'submit' },
+	                                'Login'
 	                            )
 	                        ),
 	                        _react2.default.createElement(
@@ -36498,6 +37489,18 @@
 	                )
 	            );
 	        }
+	    }, {
+	        key: 'submit',
+	        value: function submit(event) {
+	            event.preventDefault();
+
+	            _API2.default.login(new FormData(event.target), function () {
+	                alert('Successfully logged in!');
+	                _Dispatcher2.default.dispatch({ type: 'refresh-user', goto: '/map' });
+	            }, function (response) {
+	                alert(response.statusText + ': failed to log in!');
+	            });
+	        }
 	    }]);
 
 	    return Login;
@@ -36506,7 +37509,7 @@
 	module.exports = Login;
 
 /***/ },
-/* 237 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36519,9 +37522,13 @@
 
 	var _reactRouter = __webpack_require__(168);
 
-	var _MapView = __webpack_require__(232);
+	var _API = __webpack_require__(233);
 
-	var _MapView2 = _interopRequireDefault(_MapView);
+	var _API2 = _interopRequireDefault(_API);
+
+	var _Dispatcher = __webpack_require__(229);
+
+	var _Dispatcher2 = _interopRequireDefault(_Dispatcher);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36546,7 +37553,7 @@
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'site-wrap' },
-	                _react2.default.createElement(_MapView2.default, null),
+	                _react2.default.createElement(MapView, null),
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'map-btn' },
@@ -36568,10 +37575,147 @@
 	    return Map;
 	}(_react2.default.Component);
 
+	var MapView = function (_React$Component2) {
+	    _inherits(MapView, _React$Component2);
+
+	    function MapView() {
+	        var _Object$getPrototypeO;
+
+	        var _temp, _this2, _ret;
+
+	        _classCallCheck(this, MapView);
+
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
+
+	        return _ret = (_temp = (_this2 = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(MapView)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this2), _this2.getHoops = function (data) {
+	            _API2.default.getHoops(data, function (hoops) {
+	                _this2.setHoops(hoops);
+	            }, function (response) {
+	                alert('Failed to get hoops');
+	            });
+	        }, _this2.getNearbyHoops = function (data) {
+	            _API2.default.getNearbyHoops(data, function (hoops) {
+	                _this2.setHoops(hoops);
+	            }, function (response) {
+	                alert('Failed to get hoops');
+	            });
+	        }, _this2.getPopularHoops = function (data) {
+	            _API2.default.getPopularHoops(data, function (hoops) {
+	                _this2.setHoops(hoops);
+	            }, function (response) {
+	                alert('Failed to get hoops');
+	            });
+	        }, _this2.getLatestHoops = function (data) {
+	            _API2.default.getLatestHoops(data, function (hoops) {
+	                _this2.setHoops(hoops);
+	            }, function (response) {
+	                alert('Failed to get hoops');
+	            });
+	        }, _this2.setHoops = function (hoops) {
+	            _this2.clearHoops();
+
+	            if (hoops) {
+	                var _loop = function _loop(i) {
+	                    var hoop = hoops[i];
+
+	                    var marker = new google.maps.Marker({
+	                        position: new google.maps.LatLng(hoops[i].latitude, hoops[i].longitude),
+	                        map: _this2.map,
+	                        title: hoops[i].name
+	                    });
+	                    marker.addListener('click', function () {
+	                        _reactRouter.hashHistory.push('/hoop/' + hoop.id);
+	                        _Dispatcher2.default.dispatch({ type: 'view-hoop', hoop: hoop });
+	                    });
+
+	                    _this2.markers.push(marker);
+	                };
+
+	                for (var i in hoops) {
+	                    _loop(i);
+	                }
+	            }
+	        }, _this2.clearHoops = function () {
+	            for (var i in _this2.markers) {
+	                _this2.markers[i].setMap(null);
+	            }
+	            _this2.markers = [];
+	        }, _this2.handleSearch = function (event) {
+	            event.preventDefault();
+
+	            var name = event.target.value;
+	            if (name.length > 0) {
+	                _this2.getHoops({ name: name });
+	            } else {
+	                _this2.getHoops();
+	            }
+	        }, _temp), _possibleConstructorReturn(_this2, _ret);
+	    }
+
+	    _createClass(MapView, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement('div', { id: 'map' });
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _this3 = this;
+
+	            // Basic options for a simple Google Map
+	            // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
+	            var mapOptions = {
+	                // How zoomed in you want the map to start at (always required)
+	                zoom: 13,
+	                scrollwheel: false,
+	                // The latitude and longitude to center the map (always required)
+	                center: new google.maps.LatLng(14.5980, 120.9446), // Manila
+
+	                // How you would like to style the map.
+	                // This is where you would paste any style found on Snazzy Maps.
+	                styles: [{ "featureType": "all", "elementType": "labels.text.fill", "stylers": [{ "saturation": 36 }, { "color": "#333333" }, { "lightness": 40 }] }, { "featureType": "all", "elementType": "labels.text.stroke", "stylers": [{ "visibility": "on" }, { "color": "#ffffff" }, { "lightness": 16 }] }, { "featureType": "all", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "administrative", "elementType": "geometry.fill", "stylers": [{ "color": "#fefefe" }, { "lightness": 20 }] }, { "featureType": "administrative", "elementType": "geometry.stroke", "stylers": [{ "color": "#fefefe" }, { "lightness": 17 }, { "weight": 1.2 }] }, { "featureType": "administrative", "elementType": "labels", "stylers": [{ "visibility": "simplified" }] }, { "featureType": "administrative.country", "elementType": "labels", "stylers": [{ "visibility": "simplified" }] }, { "featureType": "administrative.province", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "administrative.locality", "elementType": "labels", "stylers": [{ "visibility": "simplified" }] }, { "featureType": "administrative.neighborhood", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "administrative.land_parcel", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "color": "#e8e7e7" }, { "lightness": 20 }] }, { "featureType": "landscape", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "landscape.natural", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#f5f5f5" }, { "lightness": 21 }] }, { "featureType": "poi", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi.park", "elementType": "geometry", "stylers": [{ "color": "#dedede" }, { "lightness": 21 }] }, { "featureType": "road", "elementType": "all", "stylers": [{ "color": "#ff0000" }, { "visibility": "off" }] }, { "featureType": "road", "elementType": "geometry.fill", "stylers": [{ "color": "#ff0000" }, { "visibility": "off" }] }, { "featureType": "road", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "road.highway", "elementType": "geometry", "stylers": [{ "visibility": "simplified" }] }, { "featureType": "road.highway", "elementType": "geometry.fill", "stylers": [{ "color": "#ffffff" }, { "lightness": 17 }] }, { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{ "color": "#ffffff" }, { "lightness": 29 }, { "weight": 0.2 }] }, { "featureType": "road.highway.controlled_access", "elementType": "geometry", "stylers": [{ "visibility": "off" }] }, { "featureType": "road.arterial", "elementType": "geometry", "stylers": [{ "color": "#ffffff" }, { "lightness": 18 }, { "visibility": "simplified" }] }, { "featureType": "road.local", "elementType": "geometry", "stylers": [{ "color": "#ffffff" }, { "lightness": 16 }, { "visibility": "simplified" }] }, { "featureType": "transit", "elementType": "all", "stylers": [{ "visibility": "off" }] }, { "featureType": "transit", "elementType": "geometry", "stylers": [{ "color": "#f2f2f2" }, { "lightness": 19 }] }, { "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#353537" }, { "lightness": 17 }] }]
+	            };
+
+	            // Create the Google Map using our element and options defined above
+	            this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+	            this.getHoops();
+
+	            this.dispatcherID = _Dispatcher2.default.register(function (payload) {
+	                switch (payload.type) {
+	                    case 'get-hoops':
+	                        _this3.getHoops();
+	                        break;
+	                    case 'get-nearby-hoops':
+	                        _this3.getNearbyHoops();
+	                        break;
+	                    case 'get-popular-hoops':
+	                        _this3.getPopularHoops();
+	                        break;
+	                    case 'get-latest-hoops':
+	                        _this3.getLatestHoops();
+	                        break;
+	                }
+	            });
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            this.map = null;
+
+	            _Dispatcher2.default.unregister(this.dispatcherID);
+	        }
+	    }]);
+
+	    return MapView;
+	}(_react2.default.Component);
+
 	module.exports = Map;
 
 /***/ },
-/* 238 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36583,6 +37727,10 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var _reactRouter = __webpack_require__(168);
+
+	var _API = __webpack_require__(233);
+
+	var _API2 = _interopRequireDefault(_API);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36604,60 +37752,125 @@
 	    _createClass(Navigation, [{
 	        key: 'render',
 	        value: function render() {
-	            return _react2.default.createElement(
-	                'ul',
-	                { className: 'navigation' },
-	                _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
+	            var user = this.props.user;
+
+	            if (user) {
+	                return _react2.default.createElement(
+	                    'ul',
+	                    { className: 'navigation' },
 	                    _react2.default.createElement(
-	                        _reactRouter.Link,
-	                        { to: '/' },
-	                        _react2.default.createElement('img', { src: 'images/logo_light.png' })
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
-	                    _react2.default.createElement(
-	                        _reactRouter.Link,
-	                        { to: '/profile' },
+	                        'li',
+	                        { className: 'nav-item' },
 	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'menuprofile' },
-	                            _react2.default.createElement('img', { src: 'images/profile.jpg' }),
-	                            'Zac Ong'
+	                            _reactRouter.Link,
+	                            { to: '/' },
+	                            _react2.default.createElement('img', { src: 'images/logo_light.png' })
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'li',
+	                        { className: 'nav-item' },
+	                        _react2.default.createElement(
+	                            _reactRouter.Link,
+	                            { to: '/profile' },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'menuprofile' },
+	                                _react2.default.createElement('img', { src: user.image_url ? user.image_url : 'images/avatar.png' }),
+	                                user.firstname,
+	                                ' ',
+	                                user.lastname
+	                            )
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'li',
+	                        { className: 'nav-item' },
+	                        _react2.default.createElement(
+	                            _reactRouter.Link,
+	                            { to: '/map' },
+	                            'Map'
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'li',
+	                        { className: 'nav-item' },
+	                        _react2.default.createElement(
+	                            _reactRouter.Link,
+	                            { to: '/add-hoop' },
+	                            'Add a hoop'
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'li',
+	                        { className: 'nav-item' },
+	                        _react2.default.createElement(
+	                            _reactRouter.Link,
+	                            { to: '/activities' },
+	                            'Activity feed'
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'li',
+	                        { className: 'nav-item' },
+	                        _react2.default.createElement(
+	                            _reactRouter.Link,
+	                            { to: '/about' },
+	                            'About'
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'li',
+	                        { className: 'nav-item' },
+	                        _react2.default.createElement(
+	                            'a',
+	                            { href: '#', onClick: this.logout },
+	                            'Logout'
 	                        )
 	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
+	                );
+	            } else {
+	                return _react2.default.createElement(
+	                    'ul',
+	                    { className: 'navigation' },
 	                    _react2.default.createElement(
-	                        _reactRouter.Link,
-	                        { to: '/about' },
-	                        'About'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
+	                        'li',
+	                        { className: 'nav-item' },
+	                        _react2.default.createElement(
+	                            _reactRouter.Link,
+	                            { to: '/' },
+	                            _react2.default.createElement('img', { src: 'images/logo_light.png' })
+	                        )
+	                    ),
 	                    _react2.default.createElement(
-	                        _reactRouter.Link,
-	                        { to: '/add-hoop' },
-	                        'Add a hoop'
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
+	                        'li',
+	                        { className: 'nav-item' },
+	                        _react2.default.createElement(
+	                            _reactRouter.Link,
+	                            { to: '/about' },
+	                            'About'
+	                        )
+	                    ),
 	                    _react2.default.createElement(
-	                        _reactRouter.Link,
-	                        { to: '/activities' },
-	                        'Activity feed'
+	                        'li',
+	                        { className: 'nav-item' },
+	                        _react2.default.createElement(
+	                            _reactRouter.Link,
+	                            { to: '/login' },
+	                            'Add a hoop'
+	                        )
 	                    )
-	                )
-	            );
+	                );
+	            }
+	        }
+	    }, {
+	        key: 'logout',
+	        value: function logout() {
+	            _API2.default.logout(function () {
+	                _reactRouter.hashHistory.replace('/');
+	            }, function () {
+	                alert('Failed to log out!');
+	            });
 	        }
 	    }]);
 
@@ -36667,7 +37880,7 @@
 	module.exports = Navigation;
 
 /***/ },
-/* 239 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36679,6 +37892,14 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var _reactRouter = __webpack_require__(168);
+
+	var _API = __webpack_require__(233);
+
+	var _API2 = _interopRequireDefault(_API);
+
+	var _Dispatcher = __webpack_require__(229);
+
+	var _Dispatcher2 = _interopRequireDefault(_Dispatcher);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36692,14 +37913,54 @@
 	    _inherits(Profile, _React$Component);
 
 	    function Profile() {
+	        var _Object$getPrototypeO;
+
+	        var _temp, _this, _ret;
+
 	        _classCallCheck(this, Profile);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Profile).apply(this, arguments));
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
+
+	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Profile)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+	            myHoops: null,
+	            otherHoops: null,
+	            tab: 'my-hoops',
+	            editing: false
+	        }, _this.hoops = function () {
+	            var myHoops = _this.state.myHoops;
+	            var otherHoops = _this.state.otherHoops;
+
+	            switch (_this.state.tab) {
+	                case 'my-hoops':
+	                    return myHoops ? myHoops.map(function (hoop) {
+	                        return _react2.default.createElement('img', { key: hoop.data.featured_story.id, src: hoop.data.featured_story.image_url });
+	                    }) : null;
+	                case 'other-hoops':
+	                    return otherHoops ? otherHoops.map(function (hoop) {
+	                        return _react2.default.createElement('img', { key: hoop.data.featured_story.id, src: hoop.data.featured_story.image_url });
+	                    }) : null;
+	            }
+	        }, _this.setTab = function (tab) {
+	            _this.setState({ tab: tab });
+	        }, _this.handleUserImage = function (event) {
+	            _API2.default.updateUserImage(new FormData(_this.refs.userImageForm), function () {
+	                _Dispatcher2.default.dispatch({ type: 'refresh-user' });
+	            });
+	        }, _temp), _possibleConstructorReturn(_this, _ret);
 	    }
 
 	    _createClass(Profile, [{
 	        key: 'render',
 	        value: function render() {
+	            var user = this.props.user;
+	            if (!user) {
+	                return null;
+	            }
+
+	            var tab = this.state.tab;
+
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'site-wrap' },
@@ -36707,9 +37968,14 @@
 	                    'div',
 	                    { className: 'profile' },
 	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'picture' },
-	                        _react2.default.createElement('img', { src: 'images/zac.jpg' })
+	                        'form',
+	                        { ref: 'userImageForm', className: 'picture' },
+	                        _react2.default.createElement(
+	                            'label',
+	                            { htmlFor: 'user-image' },
+	                            _react2.default.createElement('input', { id: 'user-image', type: 'file', name: 'image', onChange: this.handleUserImage }),
+	                            _react2.default.createElement('img', { src: user.image_url ? user.image_url : 'images/avatar.png' })
+	                        )
 	                    ),
 	                    _react2.default.createElement(
 	                        'div',
@@ -36717,16 +37983,20 @@
 	                        _react2.default.createElement(
 	                            'h3',
 	                            null,
-	                            'Zac Ong'
+	                            user.firstname,
+	                            ' ',
+	                            user.lastname
 	                        ),
 	                        _react2.default.createElement(
 	                            'p',
 	                            null,
-	                            '24, Male'
+	                            user.birthdate,
+	                            ', ',
+	                            user.gender
 	                        ),
 	                        _react2.default.createElement(
 	                            'button',
-	                            null,
+	                            { onClick: this.toggleEdit },
 	                            'Edit Profile'
 	                        )
 	                    ),
@@ -36738,31 +38008,51 @@
 	                            { className: 'filter' },
 	                            _react2.default.createElement(
 	                                'p',
-	                                { style: { color: '#ff6b00' } },
+	                                { onClick: this.setTab.bind(this, 'my-hoops'), style: { color: tab == 'my-hoops' && '#ff6b00' } },
 	                                'My hoops'
 	                            ),
 	                            _react2.default.createElement(
 	                                'p',
-	                                null,
+	                                { onClick: this.setTab.bind(this, 'other-hoops'), style: { color: tab == 'other-hoops' && '#ff6b00' } },
 	                                'Other hoops'
 	                            )
 	                        ),
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 'gallery' },
-	                            _react2.default.createElement('img', { src: 'images/dummy01.jpg' }),
-	                            _react2.default.createElement('img', { src: 'images/dummy02.jpg' }),
-	                            _react2.default.createElement('img', { src: 'images/dummy03.jpg' }),
-	                            _react2.default.createElement('img', { src: 'images/dummy04.jpg' }),
-	                            _react2.default.createElement('img', { src: 'images/dummy05.jpg' }),
-	                            _react2.default.createElement('img', { src: 'images/dummy06.jpg' }),
-	                            _react2.default.createElement('img', { src: 'images/dummy07.jpg' }),
-	                            _react2.default.createElement('img', { src: 'images/dummy08.jpg' }),
-	                            _react2.default.createElement('img', { src: 'images/dummy09.jpg' })
+	                            this.hoops()
 	                        )
 	                    )
 	                )
 	            );
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.getMyHoops();
+	            this.getOtherHoops();
+	        }
+	    }, {
+	        key: 'getMyHoops',
+	        value: function getMyHoops() {
+	            var _this2 = this;
+
+	            _API2.default.getMyHoops(function (hoops) {
+	                _this2.setState({ myHoops: hoops });
+	            }, function (response) {
+	                alert('Failed to get my hoops!');
+	            });
+	        }
+	    }, {
+	        key: 'getOtherHoops',
+	        value: function getOtherHoops() {
+	            var _this3 = this;
+
+	            _API2.default.getOtherHoops(function (hoops) {
+	                _this3.setState({ otherHoops: hoops });
+	            }, function (response) {
+	                alert('Failed to get other hoops');
+	            });
 	        }
 	    }]);
 
@@ -36772,7 +38062,7 @@
 	module.exports = Profile;
 
 /***/ },
-/* 240 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36784,6 +38074,14 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var _reactRouter = __webpack_require__(168);
+
+	var _API = __webpack_require__(233);
+
+	var _API2 = _interopRequireDefault(_API);
+
+	var _Dispatcher = __webpack_require__(229);
+
+	var _Dispatcher2 = _interopRequireDefault(_Dispatcher);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36830,34 +38128,41 @@
 	                        { className: 'signup-content' },
 	                        _react2.default.createElement(
 	                            'form',
-	                            null,
+	                            { method: 'POST', onSubmit: this.submit },
 	                            _react2.default.createElement(
 	                                'label',
 	                                null,
 	                                'First name: '
 	                            ),
-	                            _react2.default.createElement('input', { type: 'text', name: 'fname' }),
+	                            _react2.default.createElement('input', { type: 'text', name: 'firstname' }),
 	                            _react2.default.createElement('br', null),
 	                            _react2.default.createElement(
 	                                'label',
 	                                null,
 	                                'Last name: '
 	                            ),
-	                            _react2.default.createElement('input', { type: 'text', name: 'lname' }),
+	                            _react2.default.createElement('input', { type: 'text', name: 'lastname' }),
 	                            _react2.default.createElement('br', null),
 	                            _react2.default.createElement(
 	                                'label',
 	                                null,
 	                                'Email: '
 	                            ),
-	                            _react2.default.createElement('input', { type: 'text', name: 'email' }),
+	                            _react2.default.createElement('input', { type: 'email', name: 'email' }),
+	                            _react2.default.createElement('br', null),
+	                            _react2.default.createElement(
+	                                'label',
+	                                null,
+	                                'Password: '
+	                            ),
+	                            _react2.default.createElement('input', { type: 'password', name: 'password' }),
 	                            _react2.default.createElement('br', null),
 	                            _react2.default.createElement(
 	                                'label',
 	                                null,
 	                                'Age: '
 	                            ),
-	                            _react2.default.createElement('input', { type: 'text', name: 'age' }),
+	                            _react2.default.createElement('input', { type: 'date', name: 'birthdate' }),
 	                            _react2.default.createElement('br', null),
 	                            _react2.default.createElement(
 	                                'label',
@@ -36872,11 +38177,17 @@
 	                                'Upload picture: '
 	                            ),
 	                            _react2.default.createElement(
-	                                'button',
-	                                null,
-	                                'Select file'
+	                                'label',
+	                                { htmlFor: 'upload-image' },
+	                                'Select file',
+	                                _react2.default.createElement('input', { id: 'upload-image', type: 'file', name: 'image' })
 	                            ),
-	                            _react2.default.createElement('br', null)
+	                            _react2.default.createElement('br', null),
+	                            _react2.default.createElement(
+	                                'button',
+	                                { type: 'submit' },
+	                                'Signup'
+	                            )
 	                        ),
 	                        _react2.default.createElement(
 	                            'p',
@@ -36896,6 +38207,18 @@
 	                )
 	            );
 	        }
+	    }, {
+	        key: 'submit',
+	        value: function submit(event) {
+	            event.preventDefault();
+
+	            _API2.default.signup(new FormData(event.target), function () {
+	                alert('Successfully signed up!');
+	                _Dispatcher2.default.dispatch({ type: 'refresh-user', path: '/map' });
+	            }, function (response) {
+	                alert(response.statusText + ': failed to sign up!');
+	            });
+	        }
 	    }]);
 
 	    return Signup;
@@ -36904,7 +38227,7 @@
 	module.exports = Signup;
 
 /***/ },
-/* 241 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36925,18 +38248,205 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var SocialLogin = function (_React$Component) {
+	    _inherits(SocialLogin, _React$Component);
+
+	    function SocialLogin() {
+	        _classCallCheck(this, SocialLogin);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(SocialLogin).apply(this, arguments));
+	    }
+
+	    _createClass(SocialLogin, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'site-wrap' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'social-login' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'logo' },
+	                        _react2.default.createElement(
+	                            _reactRouter.Link,
+	                            { to: '/' },
+	                            _react2.default.createElement('img', { src: 'images/logo_light.png' })
+	                        ),
+	                        _react2.default.createElement(
+	                            'p',
+	                            null,
+	                            'The home of all things basketball'
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'social-login-content' },
+	                        _react2.default.createElement(
+	                            'a',
+	                            { href: '/auth/facebook' },
+	                            _react2.default.createElement(
+	                                'button',
+	                                { style: { backgroundColor: '#3c5a99' } },
+	                                'Login with Facebook'
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            'a',
+	                            { href: '/auth/twitter' },
+	                            _react2.default.createElement(
+	                                'button',
+	                                { style: { backgroundColor: '#00abf1' } },
+	                                'Login with Twitter'
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            _reactRouter.Link,
+	                            { to: '/login' },
+	                            _react2.default.createElement(
+	                                'button',
+	                                { style: { backgroundColor: '#ff6b00' } },
+	                                'Login with Email'
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            'p',
+	                            null,
+	                            'Don\'t have an account? ',
+	                            _react2.default.createElement(
+	                                _reactRouter.Link,
+	                                { to: '/signup' },
+	                                _react2.default.createElement(
+	                                    'span',
+	                                    { style: { color: '#fff' } },
+	                                    'Sign up here'
+	                                )
+	                            )
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return SocialLogin;
+	}(_react2.default.Component);
+
+	module.exports = SocialLogin;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(168);
+
+	var _API = __webpack_require__(233);
+
+	var _API2 = _interopRequireDefault(_API);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	var Story = function (_React$Component) {
 	    _inherits(Story, _React$Component);
 
 	    function Story() {
+	        var _Object$getPrototypeO;
+
+	        var _temp, _this, _ret;
+
 	        _classCallCheck(this, Story);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Story).apply(this, arguments));
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
+
+	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Story)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+	            story: null,
+	            comments: null,
+	            likes: 0
+	        }, _this.like = function () {
+	            var story = _this.state.story;
+	            if (story) {
+	                _API2.default.likeStory({ 'story-id': story.id }, function () {
+	                    _this.getLikes(story.id);
+	                }, function (response) {
+	                    alert('Failed to like story');
+	                });
+	            }
+	        }, _this.comment = function (event) {
+	            event.preventDefault();
+
+	            var story = _this.state.story;
+	            if (story) {
+	                var text = event.target.elements['text'].value;
+	                _API2.default.commentStory({ 'story-id': story.id, text: text }, function () {
+	                    _this.getComments(story.id);
+	                }, function (response) {
+	                    alert('Failed to comment on the story!');
+	                });
+	            }
+	        }, _this.getLikes = function (storyID) {
+	            _API2.default.getStoryLikes({ 'story-id': storyID }, function (likes) {
+	                _this.setState({ likes: likes });
+	            }, function (response) {
+	                alert('Failed to get likes count');
+	            });
+	        }, _this.getComments = function (storyID) {
+	            _API2.default.getStoryComments({ 'story-id': storyID }, function (comments) {
+	                _this.setState({ comments: comments });
+	            }, function (response) {
+	                alert('Failed to get story comments');
+	            });
+	        }, _this.comments = function () {
+	            var comments = _this.state.comments;
+	            if (!comments) {
+	                return null;
+	            }
+
+	            return comments.map(function (comment) {
+	                return _react2.default.createElement(
+	                    'p',
+	                    { key: comment.id },
+	                    _react2.default.createElement(
+	                        'strong',
+	                        null,
+	                        comment.user.firstname,
+	                        ' ',
+	                        comment.user.lastname
+	                    ),
+	                    ' ',
+	                    comment.text
+	                );
+	            });
+	        }, _temp), _possibleConstructorReturn(_this, _ret);
 	    }
 
 	    _createClass(Story, [{
 	        key: 'render',
 	        value: function render() {
+	            var story = this.state.story;
+	            if (!story) {
+	                return null;
+	            }
+
+	            var comments = this.state.comments;
+	            var likes = this.state.likes;
+
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'site-wrap' },
@@ -36946,11 +38456,11 @@
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'heroimage' },
-	                        _react2.default.createElement('img', { src: 'images/dummy06.jpg' }),
+	                        _react2.default.createElement('img', { src: story.image_url }),
 	                        _react2.default.createElement(
 	                            'h2',
 	                            null,
-	                            'La Concordia'
+	                            story.name
 	                        )
 	                    ),
 	                    _react2.default.createElement(
@@ -36959,11 +38469,13 @@
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 'userprofile' },
-	                            _react2.default.createElement('img', { src: 'images/matteo.jpg' }),
+	                            _react2.default.createElement('img', { src: story.user.image_url }),
 	                            _react2.default.createElement(
 	                                'h6',
 	                                null,
-	                                'Matteo'
+	                                story.user.firstname,
+	                                ' ',
+	                                story.user.lastname
 	                            )
 	                        ),
 	                        _react2.default.createElement(
@@ -36972,9 +38484,10 @@
 	                            _react2.default.createElement(
 	                                'p',
 	                                null,
-	                                '40 likes'
+	                                likes,
+	                                ' likes'
 	                            ),
-	                            _react2.default.createElement('img', { src: 'images/icon_love.png' }),
+	                            _react2.default.createElement('img', { src: 'images/icon_love.png', onClick: this.like }),
 	                            _react2.default.createElement('img', { src: 'images/icon_share.png' })
 	                        ),
 	                        _react2.default.createElement(
@@ -36983,7 +38496,7 @@
 	                            _react2.default.createElement(
 	                                'p',
 	                                null,
-	                                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec enim dolor, facilisis id interdum id, gravida eget lacus. Nam congue urna massa, sit amet rutrum ipsum pellentesque eu. Praesent et '
+	                                story.description
 	                            )
 	                        )
 	                    ),
@@ -36991,21 +38504,12 @@
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'usercomment' },
-	                        _react2.default.createElement(
-	                            'p',
-	                            null,
-	                            'User Name and User Comment 01'
-	                        ),
-	                        _react2.default.createElement(
-	                            'p',
-	                            null,
-	                            'User Name and User Comment 02'
-	                        )
+	                        this.comments()
 	                    ),
 	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'comment' },
-	                        _react2.default.createElement('input', { placeholder: 'add a comment', type: 'text' }),
+	                        'form',
+	                        { className: 'comment', onSubmit: this.comment },
+	                        _react2.default.createElement('input', { placeholder: 'add a comment', type: 'text', name: 'text' }),
 	                        _react2.default.createElement(
 	                            'button',
 	                            null,
@@ -37015,12 +38519,104 @@
 	                )
 	            );
 	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _this2 = this;
+
+	            var storyID = this.props.params.storyID;
+
+	            _API2.default.getStory({ storyID: storyID }, function (story) {
+	                _this2.setState({ story: story });
+	            }, function (response) {
+	                alert('Failed to get most story');
+	            });
+
+	            this.getLikes(storyID);
+	            this.getComments(storyID);
+
+	            _API2.default.viewStory({ 'story-id': storyID });
+	        }
 	    }]);
 
 	    return Story;
 	}(_react2.default.Component);
 
 	module.exports = Story;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(168);
+
+	var _API = __webpack_require__(233);
+
+	var _API2 = _interopRequireDefault(_API);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Share = function (_React$Component) {
+		_inherits(Share, _React$Component);
+
+		function Share() {
+			_classCallCheck(this, Share);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(Share).apply(this, arguments));
+		}
+
+		_createClass(Share, [{
+			key: 'render',
+			value: function render() {
+				_react2.default.createElement(
+					'div',
+					{ className: 'sharebox' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'whitebox' },
+						_react2.default.createElement(
+							'h4',
+							null,
+							'Share'
+						),
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement('img', { src: 'images/icon_fb.png' })
+						),
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement('img', { src: 'images/icon_twitter.png' })
+						),
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement('img', { src: 'images/icon_gmail.png' })
+						)
+					)
+				);
+			}
+		}]);
+
+		return Share;
+	}(_react2.default.Component);
+
+	module.exports = Share;
 
 /***/ }
 /******/ ]);

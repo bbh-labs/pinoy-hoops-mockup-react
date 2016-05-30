@@ -1,42 +1,120 @@
 'use strict'
 
 import React from 'react';
-import { Link } from 'react-router';
+import { Link, hashHistory } from 'react-router';
+
+import API from './API';
 
 class Story extends React.Component {
     render() {
+        let story = this.state.story;
+        if (!story) {
+            return null;
+        }
+
+        let comments = this.state.comments;
+        let likes = this.state.likes;
+
         return (
             <div className='site-wrap'>
                  <div className='hoopstory'>
                     <div className='heroimage'>
-                        <img src='images/dummy06.jpg' />
-                        <h2>La Concordia</h2>
+                        <img src={ story.image_url } />
+                        <h2>{ story.name }</h2>
                     </div>
                     <div className='hoop-info'>
                         <div className='userprofile'>
-                            <img src='images/matteo.jpg' />
-                            <h6>Matteo</h6>
+                            <img src={ story.user.image_url } />
+                            <h6>{ story.user.firstname } { story.user.lastname }</h6>
                         </div>
                         <div className='icons'>
-                            <p>40 likes</p>
-                            <img src='images/icon_love.png' />
-                            <img src='images/icon_share.png' />
+                            <p>{ likes } likes</p>
+                            <img src='images/icon_love.png' onClick={ this.like } />
+                            <img src='images/icon_share.png' onClick={ this.share } />
                         </div>
                         <div className='description'>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec enim dolor, facilisis id interdum id, gravida eget lacus. Nam congue urna massa, sit amet rutrum ipsum pellentesque eu. Praesent et </p>
+                            <p>{ story.description }</p>
                         </div>
                     </div>
                     <hr/>
                     <div className='usercomment'>
-                        <p>User Name and User Comment 01</p>
-                        <p>User Name and User Comment 02</p>
+                        { this.comments() }
                     </div>	
-                    <div className='comment'>
-                        <input placeholder='add a comment' type='text' /><button>Send</button>
-                    </div> 	
+                    <form className='comment' onSubmit={ this.comment }>
+                        <input placeholder='add a comment' type='text' name='text' /><button>Send</button>
+                    </form> 	
                  </div>
             </div>
         )
+    }
+    state = {
+        story: null,
+        comments: null,
+        likes: 0,
+    }
+    componentDidMount() {
+        let storyID = this.props.params.storyID;
+
+        API.getStory({ storyID: storyID }, (story) => {
+            this.setState({ story: story });
+        }, (response) => {
+            alert('Failed to get most story');
+        });
+
+        this.getLikes(storyID);
+        this.getComments(storyID);
+
+        API.viewStory({ 'story-id': storyID });
+    }
+    like = () => {
+        let story = this.state.story;
+        if (story) {
+            API.likeStory({ 'story-id': story.id }, () => {
+                this.getLikes(story.id);
+            }, (response) => {
+                alert('Failed to like story');
+            });
+        }
+    }
+    comment = (event) => {
+        event.preventDefault();
+
+        let story = this.state.story;
+        if (story) {
+            let text = event.target.elements['text'].value;
+            API.commentStory({ 'story-id': story.id, text: text }, () => {
+                this.getComments(story.id);
+            }, (response) => {
+                alert('Failed to comment on the story!');
+            });
+        }
+    }
+    getLikes = (storyID) => {
+        API.getStoryLikes({ 'story-id': storyID }, (likes) => {
+            this.setState({ likes: likes  });
+        }, (response) => {
+            alert('Failed to get likes count');
+        });
+    }
+    getComments = (storyID) => {
+        API.getStoryComments({ 'story-id': storyID }, (comments) => {
+            this.setState({ comments: comments  });
+        }, (response) => {
+            alert('Failed to get story comments');
+        });
+    }
+    comments = () => {
+        let comments = this.state.comments;
+        if (!comments) {
+            return null;
+        }
+
+        return comments.map(function(comment, i) {
+            return <p key={ i }><strong>{ comment.user.firstname } { comment.user.lastname }</strong> { comment.text }</p>;
+        });
+    }
+    share() {
+        hashHistory.replace(
     }
 }
 

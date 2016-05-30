@@ -22,6 +22,10 @@ class Home extends React.Component {
 					<p>The home of all things basketball</p>
 					<button>Enter</button>
 				</div>
+
+                <div className='nav-arrow'>
+                    <Link to='/map'><img src='images/landingpage/arrow.png' /></Link>
+                </div>
 			</section>
         )
     }

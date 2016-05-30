@@ -8,6 +8,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = require('react-router');
 
+var _Dispatcher = require('./Dispatcher');
+
+var _Dispatcher2 = _interopRequireDefault(_Dispatcher);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -49,12 +53,15 @@ var MapView = function (_React$Component) {
 
             // Create the Google Map using our element and options defined above
             this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            this.map.addListener('click', function (event) {
+                _Dispatcher2.default.dispatch({ type: 'map-click', latlng: event.latLng });
+            });
 
             // Let's also add a marker while we're at it
             var marker = new google.maps.Marker({
                 position: new google.maps.LatLng(14.5980, 120.9446),
                 map: this.map,
-                title: 'Snazzy!'
+                title: 'Hoop'
             });
         }
     }, {
